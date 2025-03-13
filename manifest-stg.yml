@@ -1,6 +1,11 @@
 ---
 applications:
   - name: ccte-bioactivity-stg
+    routes:
+#      - route: ccte-api-p.app.cloud.gov
+      #- route: ccte-bioactivity-p.app.cloud.gov
+      - route: api-ccte-stg.epa.gov/bioactivity
+      #- route: ccte-api.app.cloud.gov/bioactivity
     memory: 2G
     instances: 1
     random-route: false
