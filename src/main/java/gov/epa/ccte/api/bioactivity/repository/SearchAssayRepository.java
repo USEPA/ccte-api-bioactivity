@@ -10,7 +10,7 @@ import gov.epa.ccte.api.bioactivity.domain.SearchAssay;
 
 @SuppressWarnings("unused")
 @RepositoryRestResource(exported = false)
-public interface SearchAssayRepository extends JpaRepository<SearchAssay, Long>{
+public interface SearchAssayRepository extends JpaRepository<SearchAssay, Integer>{
     // For SearchAssayResource
 	
 	<T>List<T> findBySearchValueOrderByIdAsc(String searchValue, Class<T> type);

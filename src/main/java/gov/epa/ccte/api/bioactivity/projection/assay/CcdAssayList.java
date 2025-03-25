@@ -8,7 +8,7 @@ public interface CcdAssayList extends AssayBase {
     
     String getAssayName();
     
-    Integer getAeid();
+    Long getAeid();
     
     String getAssayComponentName();
     

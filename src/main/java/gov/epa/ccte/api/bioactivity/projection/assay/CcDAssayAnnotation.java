@@ -1,16 +1,9 @@
 package gov.epa.ccte.api.bioactivity.projection.assay;
 
-import gov.epa.ccte.api.bioactivity.domain.AssayAnnotation;
-import gov.epa.ccte.api.bioactivity.domain.AssayList;
-import gov.epa.ccte.api.bioactivity.domain.Citation;
-import gov.epa.ccte.api.bioactivity.domain.Gene;
-
-import java.util.List;
-
 /**
- * Projection for {@link AssayAnnotation}
+ * Projection for {@link gov.epa.ccte.api.bioactivity.domain.AssayAnnotation}
  */
-public interface AssayAll extends AssayBase{
+public interface CcDAssayAnnotation {
     Long getAeid();
 
     String getAssayComponentEndpointName();
@@ -34,10 +27,6 @@ public interface AssayAll extends AssayBase{
     String getIntendedTargetFamily();
 
     String getIntendedTargetFamilySub();
-
-    Short getCellViabilityAssay();
-
-    Integer getAcid();
 
     String getAssayComponentName();
 
@@ -67,15 +56,11 @@ public interface AssayAll extends AssayBase{
 
     String getTechnologicalTargetTypeSub();
 
-    Integer getAid();
-
     String getAssayName();
 
     String getAssayDesc();
 
     Double getTimepointHr();
-
-    Integer getOrganismId();
 
     String getOrganism();
 
@@ -101,17 +86,9 @@ public interface AssayAll extends AssayBase{
 
     Double getDilutionSolventPercentMax();
 
-    Integer getAsid();
-
     String getAssaySourceName();
 
     String getAssaySourceLongName();
 
     String getAssaySourceDesc();
-
-    List<Gene> getGene();
-
-    AssayList getAssayList();
-
-    List<Citation> getCitations();
 }

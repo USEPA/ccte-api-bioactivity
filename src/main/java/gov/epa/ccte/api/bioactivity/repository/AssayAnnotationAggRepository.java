@@ -1,38 +1,68 @@
 package gov.epa.ccte.api.bioactivity.repository;
 
-import gov.epa.ccte.api.bioactivity.domain.AssayAnnotation;
 import gov.epa.ccte.api.bioactivity.domain.AssayAnnotationAgg;
-import gov.epa.ccte.api.bioactivity.domain.Gene;
-import gov.epa.ccte.api.bioactivity.projection.assay.AssayCitation;
-import gov.epa.ccte.api.bioactivity.projection.assay.AssayGene;
+import gov.epa.ccte.api.bioactivity.projection.assay.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
 @RepositoryRestResource(exported = false)
-public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotationAgg, Integer> {
+public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotationAgg, Long> {
 
-	@Query(value = """
-			SELECT DISTINCT aeid, assay_component_endpoint_name, assay_component_endpoint_desc, assay_function_type,
-			       normalized_data_type, burst_assay, key_positive_control, signal_direction, intended_target_type,
-			       intended_target_type_sub, intended_target_family, intended_target_family_sub, assay_component_name,
-			       assay_component_desc, assay_component_target_desc, parameter_readout_type, assay_design_type,
-			       assay_design_type_sub, biological_process_target, detection_technology, detection_technology_type,
-			       detection_technology_type_sub, key_assay_reagent_type, key_assay_reagent, technological_target_type,
-			       technological_target_type_sub, assay_name, assay_desc, timepoint_hr, organism, tissue, cell_format,
-			       cell_free_component_source, cell_short_name, cell_growth_mode, assay_footprint, assay_format_type,
-			       assay_format_type_sub, content_readout_type, dilution_solvent, dilution_solvent_percent_max,
-			       assay_source_name, assay_source_long_name, assay_source_desc
-			FROM invitro.mv_assay_annotation
+@Query(value = """   
+   			SELECT aeid,
+             assay_component_endpoint_name as AssayComponentEndpointName,
+             assay_component_endpoint_desc as AssayComponentEndpointDesc,
+             assay_function_type           as AssayFunctionType,
+             normalized_data_type          as NormalizedDataType,
+             burst_assay                   as BurstAssay,
+             key_positive_control          as KeyPositiveControl,
+             signal_direction              as SignalDirection,
+             intended_target_type          as IntendedTargetType,
+             intended_target_type_sub      as IntendedTargetTypeSub,
+             intended_target_family        as IntendedTargetFamily,
+             intended_target_family_sub    as IntendedTargetFamilySub,
+             assay_component_name          as AssayComponentName,
+             assay_component_desc          as AssayComponentDesc,
+             assay_component_target_desc   as AssayComponentTargetDesc,
+             parameter_readout_type        as ParameterReadoutType,
+             assay_design_type             as AssayDesignType,
+             assay_design_type_sub         as AssayDesignTypeSub,
+             biological_process_target     as BiologicalProcessTarget,
+             detection_technology          as DetectionTechnology,
+             detection_technology_type     as DetectionTechnologyType,
+             detection_technology_type_sub as DetectionTechnologyTypeSub,
+             key_assay_reagent_type        as KeyAssayReagentType,
+             key_assay_reagent             as KeyAssayReagent,
+             technological_target_type     as TechnologicalTargetType,
+             technological_target_type_sub as TechnologicalTargetTypeSub,
+             assay_name                    as AssayName,
+             assay_desc                    as AssayDesc,
+             timepoint_hr                  as TimepointHr,
+             organism,
+             tissue,
+             cell_format                   as CellFormat,
+             cell_free_component_source    as CellFreeComponentSource,
+             cell_short_name               as CellShortName,
+             cell_growth_mode              as CellGrowthMode,
+             assay_footprint               as AssayFootprint,
+             assay_format_type             as AssayFormatType,
+             assay_format_type_sub         as AssayFormatTypeSub,
+             content_readout_type          as ContentReadoutType,
+             dilution_solvent              as DilutionSolvent,
+             dilution_solvent_percent_max  as DilutionSolventPercentMax,
+             assay_source_name             as AssaySourceName,
+             assay_source_long_name        as AssaySourceLongName,
+             assay_source_desc             as AssaySourceDesc
+      FROM invitro.mv_assay_annotation
 			WHERE aeid = :aeid
 			""", nativeQuery = true)
-	List<AssayAnnotationAgg> findAnnotationByAeid(@Param("aeid") Integer aeid);
+	List<CcDAssayAnnotation> findAnnotationByAeid(@Param("aeid") Integer aeid);
 
 	@Query(value = """
 			    SELECT aeid,
@@ -49,7 +79,7 @@ public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotat
 			         jsonb_array_elements(maa.citations\\:\\:jsonb) AS element
 			    WHERE maa.citations IS NOT NULL AND aeid = :aeid
 			""", nativeQuery = true)
-	List<AssayCitation> findCitationsByAeid(@Param("aeid") Integer aeid);
+	List<CcdAssayCitation> findCitationsByAeid(@Param("aeid") Integer aeid);
 
 	@Query(value = """
 			    SELECT aeid,
@@ -60,6 +90,90 @@ public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotat
 			         jsonb_array_elements(maa.gene\\:\\:jsonb) AS element
 			    WHERE gene IS NOT NULL AND aeid = :aeid
 			""", nativeQuery = true)
-	List<AssayGene> findGeneByAeid(@Param("aeid") Integer aeid);
+	List<CcdAssayGene> findGeneByAeid(@Param("aeid") Integer aeid);
+
+	@Query(value = """
+				select row_number() over (order by methodName) as orderId, assayRunType, assayRunType, methodName, description
+				from (select aeid,
+							 'multi'                    as assayRunType,
+							 2                          as levelApplied,
+							 element_mc2 ->> 'mc2_mthd' as methodName,
+							 element_mc2 ->> 'desc'     as description
+					  from invitro.mv_assay_annotation maa,
+						   jsonb_array_elements(mc2_methods\\:\\:jsonb) as element_mc2
+					  where mc2_methods is not null
+					  union
+					  select aeid,
+							 'multi'                    as assayRunType,
+							 3                          as levelApplied,
+							 element_mc3 ->> 'mc3_mthd' as methodName,
+							 element_mc3 ->> 'desc'     as description
+					  from invitro.mv_assay_annotation maa,
+						   jsonb_array_elements(mc3_methods\\:\\:jsonb) as element_mc3
+					  where mc3_methods is not null
+					  union
+					  select aeid,
+							 'multi'                    as assayRunType,
+							 4                          as levelApplied,
+							 element_mc4 ->> 'mc4_mthd' as methodName,
+							 element_mc4 ->> 'desc'     as description
+					  from invitro.mv_assay_annotation maa,
+						   jsonb_array_elements(mc4_methods\\:\\:jsonb) as element_mc4
+					  where mc4_methods is not null
+					  union
+					  select aeid,
+							 'multi'                    as assayRunType,
+							 5                          as levelApplied,
+							 element_mc5 ->> 'mc5_mthd' as methodName,
+							 element_mc5 ->> 'desc'     as description
+					  from invitro.mv_assay_annotation maa,
+						   jsonb_array_elements(mc5_methods\\:\\:jsonb) as element_mc5
+					  where mc5_methods is not null
+					  union
+					  select aeid,
+							 'multi'                    as assayRunType,
+							 6                          as levelApplied,
+							 element_mc6 ->> 'mc6_mthd' as methodName,
+							 element_mc6 ->> 'desc'     as description
+					  from invitro.mv_assay_annotation maa,
+						   jsonb_array_elements(mc6_methods\\:\\:jsonb) as element_mc6
+					  where mc6_methods is not null
+					  union
+					  select aeid,
+							 'single'                   as assayRunType,
+							 1                          as levelApplied,
+							 element_sc1 ->> 'sc1_mthd' as methodName,
+							 element_sc1 ->> 'desc'     as description
+					  from invitro.mv_assay_annotation maa,
+						   jsonb_array_elements(sc1_methods\\:\\:jsonb) as element_sc1
+					  where element_sc1 ->> 'sc1_mthd' is not null
+						 or element_sc1 ->> 'desc' is not null
+					  union
+					  select aeid,
+							 'single'                   as assayRunType,
+							 2                          as levelApplied,
+							 element_sc2 ->> 'sc2_mthd' as methodName,
+							 element_sc2 ->> 'desc'     as description
+					  from invitro.mv_assay_annotation maa,
+						   jsonb_array_elements(sc2_methods\\:\\:jsonb) as element_sc2
+					  where element_sc2 ->> 'sc2_mthd' is not null
+						 or element_sc2 ->> 'desc' is not null) tcpl
+				where aeid = :aeid
+				ORDER BY assayRunType, assayRunType, methodName, description;
+	""", nativeQuery = true)
+	List<CcdTcplData> findTcplByAeid(@Param("aeid") Integer aeid);
+
+	@Query(value = """
+		select row_number() over (
+			order by key_assay_reagent_type, key_assay_reagent) as orderId,
+			   key_assay_reagent_type                           as reagentType,
+			   key_assay_reagent                                as reagentValue,
+			   technological_target_type                        as cultureOrAssay
+		from (select key_assay_reagent_type, key_assay_reagent, technological_target_type
+			  from invitro.mv_assay_annotation maa
+			  where aeid = :aeid
+			  group by key_assay_reagent_type, key_assay_reagent, technological_target_type) reagent
+	""", nativeQuery = true)
+	List<CcdReagents> findReagentByAeid(@Param("aeid") Integer aeid);
 
 }

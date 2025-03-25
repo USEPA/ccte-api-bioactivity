@@ -10,9 +10,9 @@ import java.util.Map;
  * Projection for {@link gov.epa.ccte.api.bioactivity.domain.BioactivityData}
  */
 public interface BioactivityDataAll extends BioactivityDataBase {
-    Integer getM4id();
+    Long getM4id();
 
-    Integer getAeid();
+    Long getAeid();
 
     String getSpid();
 
@@ -38,9 +38,9 @@ public interface BioactivityDataAll extends BioactivityDataBase {
 
     Double getMaxMedConc();
 
-    Double getLogcMax();
+    Double getConcMax();
 
-    Double getLogcMin();
+    Double getConcMin();
 
     Integer getNconc();
 
@@ -48,9 +48,9 @@ public interface BioactivityDataAll extends BioactivityDataBase {
 
     Double getNrep();
 
-    Integer getNmedGtbl();
-
-    Integer getTmpi();
+    Integer getNmedGtblPos();
+    
+    Integer getNmedGtblNeg();
 
     Long getM5id();
 

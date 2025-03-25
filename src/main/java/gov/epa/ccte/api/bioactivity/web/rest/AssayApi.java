@@ -106,4 +106,5 @@ public interface AssayApi {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
     List<?> allAssays(@RequestParam(value = "projection", required = false, defaultValue = "assay-all") String projection);
+    
 }

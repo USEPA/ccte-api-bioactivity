@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 @Setter
 public class Mc3Param implements Serializable {
 
-    private BigDecimal[] logc;
+    private BigDecimal[] conc;
     private BigDecimal[] resp;
+
+    
 }

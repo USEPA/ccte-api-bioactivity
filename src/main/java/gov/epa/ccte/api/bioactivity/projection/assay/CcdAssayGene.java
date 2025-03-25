@@ -1,6 +1,6 @@
 package gov.epa.ccte.api.bioactivity.projection.assay;
 
-public interface AssayGene {
+public interface CcdAssayGene {
 	
 	Integer getEntrezGeneId();
 

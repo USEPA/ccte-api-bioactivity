@@ -5,40 +5,29 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
 @Schema(description = "US EPA's Toxicity Forecaster (ToxCast) program makes invitro medium- and high-throughput screening assay data publicly available for prioritization and hazard characterization. Given ToxCast includes a heterogeneous set of assays across a diverse biological space, annotations in the database help flexibly aggregate and differentiate processed data. The definition of an “assay” is, in ToxCast, broken into 4 assay elements: assay source: the vendor/origination of the data, assay: the procedure to generate the component data, assay component: the raw data readout(s), assay component endpoint: the normalized component data. The assay element annotations are often short in a standardized format or use a controlled term list. Assay” resource endpoints provide assay metadata for specific or all invitrodb ‘aeids’ (assay endpoint ids). These include annotations from invitrodb’s assay, assay_component, assay_component_endpoint, assay_list, assay_source, and gene tables, all returned in a by-aeid format. Regular ToxCast/invitrodb users may find it easier to use the tcpl R package, which has integrated to make API data retrievable in a familiar format. See the tcpl vignette regarding data retrieval via API for more information.")
 @Entity
-@Table(name = "v_assay_annotation", schema = "bio4_1")
+@Table(name = "mv_assay_annotation", schema = "invitro")
 public class AssayAnnotation {
     @Id
     @Column(name = "aeid", nullable = false)
     @Schema(description = "Assay component endpoint ID")
-    private Integer aeid;
+    private Long aeid;
 
     @Size(max = 255)
     @Column(name = "assay_component_endpoint_name")
     @Schema(description = "Assay component endpoint name (abbreviated 'aenm' within the package)")
     private String assayComponentEndpointName;
-
-    @Column(name = "export_ready")
-    @Schema(description = "Indicator of data readiness for public release, where (1) indicates the data is ready for export or (0) still in progress")
-    private Integer exportReady;
-
-    @Column(name = "internal_ready")
-    @Schema(description = "Indicator of data readiness for internal use, where (1) indicates the data ready for internal users or (0) not ready for public release")
-    private Integer internalReady;
 
     @Column(name = "assay_component_endpoint_desc", length = Integer.MAX_VALUE)
     @Schema(description = "Assay component endpoint description")
@@ -56,7 +45,7 @@ public class AssayAnnotation {
 
     @Column(name = "burst_assay")
     @Schema(description = "Indicator if endpoint is included in the burst distribution (1) or not (0); Burst phenomenon can describe confounding activity, such as cytotoxicity due to non-specific activation of many targets at certain concentrations")
-    private Integer burstAssay;
+    private Short burstAssay;
 
     @Size(max = 255)
     @Column(name = "key_positive_control")
@@ -90,11 +79,7 @@ public class AssayAnnotation {
 
     @Column(name = "cell_viability_assay")
     @Schema(description = "Indicator of the impact of cytotoxicity in confounding (1) or no cytotoxic impact (0)")
-    private Integer cellViabilityAssay;
-
-    @Column(name = "data_usability")
-    @Schema(description = "Indicator of the usability of data (1) or no (0)")
-    private Integer dataUsability;
+    private Short cellViabilityAssay;
 
     @Column(name = "acid")
     @Schema(description = "Assay component ID")
@@ -194,6 +179,21 @@ public class AssayAnnotation {
     @Schema(description = "Organism of origin")
     private String organism;
 
+    @Column(name = "ncbi_taxon_id")
+    private Integer ncbiTaxonId;
+    
+    @Size(max = 255)
+    @Column(name = "taxon_name")
+    private String taxonName;
+    
+    @Size(max = 255)
+    @Column(name = "common_name")
+    private String commonName;
+    
+    @Size(max = 255)
+    @Column(name = "lineage")
+    private String lineage;
+    
     @Size(max = 255)
     @Column(name = "tissue")
     @Schema(description = "Tissue of origin")
@@ -282,21 +282,37 @@ public class AssayAnnotation {
     @Schema(description = "JSON object containing references to assay-specific publications describing assay design or results")
     private List<Citation> citations;
 
-    @NotNull
-    @Column(name = "export_date", nullable = false)
-    @Schema(description = "Date view was exported")
-    private LocalDate exportDate;
+    @Column(name = "mc2_methods")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Schema(description = "JSON object containing Level 2 Multi-concentration (MC2)")
+    private List<Mc2Method> mc2Methods;
+    
+    @Column(name = "mc3_methods")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Schema(description = "JSON object containing Level 3 Multi-concentration (MC3) normalized concentration-response data")
+    private List<Mc3Method> mc3Methods;
 
-    @Size(max = 28)
-    @NotNull
-    @ColumnDefault("''")
-    @Column(name = "version", nullable = false, length = 28)
-    @Schema(description = "Version of invitrodb data")
-    private String version;
+    @Column(name = "mc4_methods")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Schema(description = "JSON object containing Level 4 Multi-concentration (MC4) All Models Fitting Parameters")
+    private List<Mc4Method> mc4Methods;
 
-    @ColumnDefault("CURRENT_DATE")
-    @Column(name = "import_date")
-    @Schema(description = "Date imported to API")
-    private LocalDate importDate;
+    @Column(name = "mc5_methods")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Schema(description = "JSON object containing Level 5 Multi-concentration (MC5) Winning Model Fitting Parameters")
+    private List<Mc5Method> mc5Methods;
+
+    @Column(name = "mc6_methods")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Schema(description = "JSON object containing Level 6 Multi-concentration (MC6) Flags")
+    private List<Mc6Method> mc6Methods;
+    
+    @Column(name = "sc1_methods")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<Sc1Method> sc1Methods;
+    
+    @Column(name = "sc2_methods")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<Sc2Method> sc2Methods;
 
 }
