@@ -37,6 +37,7 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
     			gene_elem->>'gene_symbol' AS geneSymbol,
     			maa.common_name AS commonName,
     			maa.taxon_name AS taxonName,
+    			maa.assay_list AS assayList,
     			agg.active_sc AS singleConcChemicalCountActive,
     			agg.total_sc AS singleConcChemicalCountTotal,
     			agg.active_mc AS multiConcChemicalCountActive,

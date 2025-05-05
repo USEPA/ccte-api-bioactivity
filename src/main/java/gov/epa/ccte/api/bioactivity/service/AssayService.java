@@ -7,12 +7,17 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import gov.epa.ccte.api.bioactivity.projection.assay.CcdAssayList;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class AssayService {
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
 	
 	public List<Map<String, Object>> wrapCcdAssayList(List<CcdAssayList> assayList) {
 	    Map<Long, Map<String, Object>> assayMap = new LinkedHashMap<>();
@@ -31,7 +36,17 @@ public class AssayService {
 	            map.put("ccdAssayDetail", assay.getCcdAssayDetail());
 	            map.put("commonName", assay.getCommonName());
 	            map.put("taxonName", assay.getTaxonName());
-
+	            
+	            String rawJson = assay.getAssayList();
+	            List<Map<String, Object>> parsed = new ArrayList<>();
+	            try {
+	                if (rawJson != null && !rawJson.isBlank()) {
+	                    parsed = mapper.readValue(rawJson, new TypeReference<List<Map<String, Object>>>() {});
+	                }
+	            } catch (Exception e) {
+	            }
+	            map.put("assayList", parsed);
+	            
 	            map.put("geneArray", new ArrayList<Map<String, Object>>());
 
 	            Map<String, Object> singleConc = new LinkedHashMap<>();
