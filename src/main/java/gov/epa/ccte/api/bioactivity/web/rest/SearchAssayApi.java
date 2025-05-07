@@ -3,6 +3,7 @@ package gov.epa.ccte.api.bioactivity.web.rest;
 import java.util.List;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ public interface SearchAssayApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {SearchAssay.class}))),
             @ApiResponse(responseCode = "400", description = "Data not found.",
-                    content = @Content(mediaType = "application/problem+json", schema = @Schema(oneOf = {SearchAssay.class})))
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(oneOf = {ProblemDetail.class})))
     })
     @GetMapping(value = "bioactivity/search/start-with/{value}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<SearchAssay> assayStartWith(
@@ -35,14 +36,24 @@ public interface SearchAssayApi {
             @PathVariable("value") String value,
             @RequestParam(value = "top", required = false, defaultValue = "500") Integer top);
 
-    @Operation(summary = "Search by exact value")
+    @Operation(summary = "Search by exact value", description = "NOTE: Search value needs to be URL encoded for synonyms")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {SearchAssay.class}))),
+            @ApiResponse(responseCode = "400", description = "Data not found.",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(oneOf = {ProblemDetail.class})))
+    })
     @GetMapping(value = "bioactivity/search/equal/{value}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<SearchAssay> assayEqual(
             @Parameter(required = true, description = "Exact match of search value",
                     examples = {@ExampleObject(name="Search Value", value = "ATG_STAT3_CIS")})
             @PathVariable("value") String value);
 
-    @Operation(summary = "Search by substring value")
+    @Operation(summary = "Search by substring value", description = "NOTE: Search value needs to be URL encoded for synonyms")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {SearchAssay.class}))),
+            @ApiResponse(responseCode = "400", description = "Data not found.",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(oneOf = {ProblemDetail.class})))
+    })
     @GetMapping(value = "bioactivity/search/contain/{value}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<SearchAssay> assayContain(
             @Parameter(required = true, description = "Substring of search word",

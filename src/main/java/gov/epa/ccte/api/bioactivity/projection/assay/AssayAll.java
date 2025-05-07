@@ -111,7 +111,7 @@ public interface AssayAll extends AssayBase{
 
     List<Gene> getGene();
 
-    AssayList getAssayList();
+    List<AssayList> getAssayList();
 
     List<Citation> getCitations();
 }

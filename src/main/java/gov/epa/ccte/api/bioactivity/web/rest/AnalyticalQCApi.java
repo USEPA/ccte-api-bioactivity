@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +17,10 @@ public interface AnalyticalQCApi {
 
     @Operation(summary = "Get analytical QC data by DTXSID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Data not found", content = @Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {AnalyticalQC.class}))),
+            @ApiResponse(responseCode = "404", description = "Data not found", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ProblemDetail.class})))
     })
     @GetMapping("/search/by-dtxsid/{dtxsid}")
     List<AnalyticalQC> findByDsstoxSubstanceId(@PathVariable("dtxsid") String dtxsid);
 }
+

@@ -1,9 +1,15 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
 import gov.epa.ccte.api.bioactivity.domain.AssayAnnotation;
+import gov.epa.ccte.api.bioactivity.domain.BioactivityAgg;
 import gov.epa.ccte.api.bioactivity.projection.assay.AssayAll;
-import gov.epa.ccte.api.bioactivity.projection.assay.AssayBase;
-import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataAll;
+import gov.epa.ccte.api.bioactivity.projection.assay.AssayEndpointsList;
+import gov.epa.ccte.api.bioactivity.projection.assay.CcDAssayAnnotation;
+import gov.epa.ccte.api.bioactivity.projection.assay.CcdAssayCitation;
+import gov.epa.ccte.api.bioactivity.projection.assay.CcdAssayGene;
+import gov.epa.ccte.api.bioactivity.projection.assay.CcdReagents;
+import gov.epa.ccte.api.bioactivity.projection.assay.CcdSingleConcData;
+import gov.epa.ccte.api.bioactivity.projection.assay.CcdTcplData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -15,6 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,9 +52,9 @@ public interface AssayApi {
 	                         "ccd-assay-annotation, ccd-assay-gene, ccd-assay-citations, ccd-assay-tcpl, ccd-assay-reagents, assay-all. " +
 	                         "If no projection is specified, the default full assay data will be returned.")
 	@ApiResponses(value = {
-	        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json")),
-	        @ApiResponse(responseCode = "400", description = "Invalid projection type", content = @Content(mediaType = "application/json")),
-	        @ApiResponse(responseCode = "404", description = "No data found for the given aeid", content = @Content(mediaType = "application/json"))
+	        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {AssayAnnotation.class, CcDAssayAnnotation.class, CcdAssayGene.class, CcdAssayCitation.class, CcdTcplData.class, CcdReagents.class}))),
+	        @ApiResponse(responseCode = "400", description = "Invalid projection type", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ProblemDetail.class}))),
+	        @ApiResponse(responseCode = "404", description = "No data found for the given aeid", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ProblemDetail.class})))
 	})
 	@RequestMapping(value = "/search/by-aeid/{aeid}", method = RequestMethod.GET)
 	@ResponseBody
@@ -68,7 +75,7 @@ public interface AssayApi {
      */
     @Operation(summary = "Get list of DTXSIDs by aeid")
     @ApiResponses(value= {
-            @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json"))
+            @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json", schema = @Schema(oneOf = {BioactivityAgg.class})))
     })
     @RequestMapping(value = "/chemicals/search/by-aeid/{aeid}", method = RequestMethod.GET)
     @ResponseBody
@@ -91,7 +98,24 @@ public interface AssayApi {
             content = {@Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
                     examples = {@ExampleObject("\"[\\\"111\\\",\\\"3032\\\"]\"")})})
                                                     @RequestBody String[] aeids);
-    
+
+    /**
+     * {@code GET  /bioactivity/assay/single-conc/search/by-aeid/:aeid} : single conc data for the "aeid".
+     *
+     * @param aeid the matching aeid of the single conc data to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and array of single conc data for the "aeid".
+     */
+    @Operation(summary = "Get single conc data by aeid")
+    @ApiResponses(value= {
+            @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json", schema = @Schema(oneOf = {CcdSingleConcData.class})))
+    })
+    @RequestMapping(value = "/single-conc/search/by-aeid/{aeid}", method = RequestMethod.GET)
+    @ResponseBody
+    List<?> singleConcDataByAeid(@Parameter(required = true, description = "Numeric assay endpoint identifier", example = "3032") @PathVariable("aeid") Integer aeid
+            , @RequestParam(value = "projection", required = false, defaultValue = "single-conc") String projection
+    );
+
+
     /**
      * {@code GET  /bioactivity/assay/} : get all assays annotation .
      * *
@@ -107,4 +131,28 @@ public interface AssayApi {
     @ResponseBody
     List<?> allAssays(@RequestParam(value = "projection", required = false, defaultValue = "assay-all") String projection);
     
-}
+    /**
+     * {@code GET  bioactivity/assay/search/by-gene/{geneSymbol}} : get assay endpoints list by gene symbol .
+     * *
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the array of asssay endpoints list.
+     */
+    @Operation(summary = "Get assay endpoints list")
+    @ApiResponses(value= {
+            @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
+                    schema=@Schema(oneOf = {AssayEndpointsList.class}))),
+    })
+    @RequestMapping(value = "/search/by-gene/{geneSymbol}", method = RequestMethod.GET)
+    @ResponseBody
+    List<AssayEndpointsList> assayEndpointsListByGene(@Parameter(required = true, description = "Gene Symbol", example = "TUBA1A") @PathVariable("geneSymbol") String geneSymbol);
+
+    /**
+     * {@code GET  bioactivity/assay/count}} : returns total count of all assay
+     * *
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and total count of all assay
+     */
+    @Operation(summary = "Get count of all available assays")
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    @ResponseBody
+    Long assayCount();

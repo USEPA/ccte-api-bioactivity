@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "agency": "Environmental Protection Agency",
+    "releases": [
+      {
+        "name": "CTX Bioactivity APIs",
+        "organization": "EPA",
+        "description": "A RESTful API for retrieving Bioactivity data.",
+        "permissions": {
+          "licenses": [
+            {
+              "name": "MIT",
+              "URL": "https://opensource.org/licenses/MIT"
+            }
+          ],
+          "usageType": "openSource"
+        },
+        "repositoryURL": "https://github.com/USEPA/ccte-api-bioactivity",
+        "homepageURL": "https://www.epa.gov/comptox-tools/computational-toxicology-and-exposure-apis",
+        "languages": [
+          "Java"
+        ],
+        "tags": [
+          "bioactivity data",
+          "toxicity",
+          "REST API",
+          "Spring Boot",
+          "Highthroughput",
+          "computational toxicology",
+          "environmental data"
+        ],
+        "contact": {
+          "email": "rashid.asif@epa.gov",
+          "name": "Asif Rashid"
+        },
+        "date": {
+          "created": "2025-04-15",
+          "lastModified": "2025-04-15"
+        },
+        "laborHours": 0
+      }
+    ],
+    "measurementType": "other",
+    "status": "production"
+  }

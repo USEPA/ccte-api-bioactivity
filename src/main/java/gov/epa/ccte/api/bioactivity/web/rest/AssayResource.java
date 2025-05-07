@@ -1,12 +1,10 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
 import gov.epa.ccte.api.bioactivity.projection.assay.AssayAll;
-import gov.epa.ccte.api.bioactivity.projection.assay.AssayBase;
+import gov.epa.ccte.api.bioactivity.projection.assay.AssayEndpointsList;
 import gov.epa.ccte.api.bioactivity.projection.assay.CcdAssayList;
-import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataAll;
-import gov.epa.ccte.api.bioactivity.repository.AssayAnnotationAggRepository;
-import gov.epa.ccte.api.bioactivity.repository.AssayAnnotationRepository;
-import gov.epa.ccte.api.bioactivity.repository.BioactivityAggRepository;
+import gov.epa.ccte.api.bioactivity.repository.*;
+import gov.epa.ccte.api.bioactivity.service.AssayService;
 import gov.epa.ccte.api.bioactivity.web.rest.error.HigherNumberOfRequestsException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,15 +20,23 @@ public class AssayResource implements AssayApi {
     
     final private BioactivityAggRepository bioactivityAggRepository;
     final private AssayAnnotationAggRepository assayAnnotationAggRepository;
+    final private AOPRepository aopRepository;
+
+    private final AssayService assayService;
+
+    private final BioactivityScRepository bioactivityScRepository;
 
     
     @Value("200")
     private Integer batchSize;
     
-    public AssayResource(AssayAnnotationRepository annotationRepository, BioactivityAggRepository bioactivityAggRepository, AssayAnnotationAggRepository assayAnnotationAggRepository) {
+    public AssayResource(AssayAnnotationRepository annotationRepository, BioactivityAggRepository bioactivityAggRepository, AssayAnnotationAggRepository assayAnnotationAggRepository, AOPRepository aopRepository, AssayService assayService, BioactivityScRepository bioactivityScRepository) {
         this.annotationRepository = annotationRepository;
 		this.bioactivityAggRepository = bioactivityAggRepository;
 		this.assayAnnotationAggRepository = assayAnnotationAggRepository;
+        this.aopRepository = aopRepository;
+        this.assayService = assayService;
+        this.bioactivityScRepository = bioactivityScRepository;
     }
 
     @Override
@@ -48,6 +54,7 @@ public class AssayResource implements AssayApi {
             case "ccd-assay-citations" -> assayAnnotationAggRepository.findCitationsByAeid(aeid);
             case "ccd-tcpl-processing" -> assayAnnotationAggRepository.findTcplByAeid(aeid);
             case "ccd-assay-reagents" -> assayAnnotationAggRepository.findReagentByAeid(aeid);
+            case "ccd-assay-aop" -> aopRepository.findByToxcastAeid(aeid);
             default -> annotationRepository.findByAeid(aeid, AssayAll.class);
         };
 
@@ -74,10 +81,19 @@ public class AssayResource implements AssayApi {
     }
 
     @Override
+    public List<?> singleConcDataByAeid(Integer aeid, String projection) {
+        return switch (projection) {
+            case "single-conc" -> bioactivityScRepository.findByAeidAndChidRep(aeid, (short) 1);
+            case "ccd-single-conc" -> bioactivityScRepository.getSigleConcDataByAeid(aeid);
+            default -> bioactivityScRepository.findByAeidAndChidRep(aeid, (short) 1);
+        };
+    }
+
+    @Override
     public List<?> allAssays( String projection) {
 
     	return switch (projection) {
-        case "ccd-assay-list" -> annotationRepository.findAssayAnnotations(CcdAssayList.class);
+        case "ccd-assay-list" -> assayService.wrapCcdAssayList(annotationRepository.findAssayAnnotations(CcdAssayList.class));
         case "assay-all" -> annotationRepository.findBy(AssayAll.class);
 		default -> annotationRepository.findBy(AssayAll.class);
     };  
@@ -91,4 +107,16 @@ public class AssayResource implements AssayApi {
         return bioactivityAggRepository.getChemicalsByAeid(aeid);
 	}
 	
+	@Override
+	public List<AssayEndpointsList> assayEndpointsListByGene(String geneSymbol) {
+		
+        log.debug("aeid = {}", geneSymbol);
+        return annotationRepository.findAssayEndpointsListByGene(geneSymbol);
+	}
+	
+	@Override
+	public Long assayCount() {
+
+        return annotationRepository.count();
+	}
 }

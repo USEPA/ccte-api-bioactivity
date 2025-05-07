@@ -1,5 +1,6 @@
 package gov.epa.ccte.api.bioactivity.projection.assay;
 
+
 public interface CcdAssayList extends AssayBase {
 	
     String getVendorKey();
@@ -16,6 +17,8 @@ public interface CcdAssayList extends AssayBase {
     
     String getAssayComponentEndpointDesc();
     
+    String getCcdAssayDetail();
+    
     String getEntrezGeneId();
     
     String getGeneName();
@@ -25,6 +28,8 @@ public interface CcdAssayList extends AssayBase {
     String getCommonName();
     
     String getTaxonName();
+    
+    String getAssayList();
     
     Integer getSingleConcChemicalCountActive();
     
