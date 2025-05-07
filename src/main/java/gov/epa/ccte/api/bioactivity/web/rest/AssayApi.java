@@ -156,3 +156,4 @@ public interface AssayApi {
     @RequestMapping(value = "/count", method = RequestMethod.GET)
     @ResponseBody
     Long assayCount();
+}
