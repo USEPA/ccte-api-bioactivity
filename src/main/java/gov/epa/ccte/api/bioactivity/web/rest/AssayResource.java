@@ -119,5 +119,4 @@ public class AssayResource implements AssayApi {
 
         return annotationRepository.count();
 	}
-	
 }

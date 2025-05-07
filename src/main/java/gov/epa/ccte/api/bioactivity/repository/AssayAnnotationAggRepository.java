@@ -60,6 +60,7 @@ public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotat
              assay_source_long_name        as AssaySourceLongName,
              assay_source_desc             as AssaySourceDesc,
              CONCAT('https://clowder.edap-cluster.com/files/', clowder_uid) AS ToxCastAssayDescription
+
       FROM invitro.mv_assay_annotation
 			WHERE aeid = :aeid
 			""", nativeQuery = true)
@@ -94,6 +95,7 @@ public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotat
 	List<CcdAssayGene> findGeneByAeid(@Param("aeid") Integer aeid);
 
 	@Query(value = """
+
 				select row_number() over (order by methodName) as orderId, assayRunType, assayRunType, methodName, description, levelApplied
 				from (select aeid,
 							 'multi'                    as assayRunType,

@@ -23,3 +23,4 @@ public interface AnalyticalQCApi {
     @GetMapping("/search/by-dtxsid/{dtxsid}")
     List<AnalyticalQC> findByDsstoxSubstanceId(@PathVariable("dtxsid") String dtxsid);
 }
+
