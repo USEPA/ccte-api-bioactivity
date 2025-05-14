@@ -3,7 +3,7 @@ package gov.epa.ccte.api.bioactivity.repository;
 import gov.epa.ccte.api.bioactivity.domain.BioactivityData;
 import gov.epa.ccte.api.bioactivity.projection.data.AedRawDataProjection;
 import gov.epa.ccte.api.bioactivity.projection.data.SummaryByTissue;
-import gov.epa.ccte.api.bioactivity.projection.data.ToxcastSummaryPlot;
+import gov.epa.ccte.api.bioactivity.projection.assay.ToxcastSummaryPlot;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
