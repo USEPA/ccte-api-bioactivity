@@ -12,6 +12,7 @@ public class AedData {
 	private String dtxsid;
 	private String preferredName;
 	private Integer aeid;
+	private String aenm;
 
 	private List<Double> aedVal;
 	private List<String> aedType;
