@@ -3,7 +3,7 @@ package gov.epa.ccte.api.bioactivity.repository;
 import gov.epa.ccte.api.bioactivity.domain.BioactivityData;
 import gov.epa.ccte.api.bioactivity.projection.data.AedRawDataProjection;
 import gov.epa.ccte.api.bioactivity.projection.data.SummaryByTissue;
-import gov.epa.ccte.api.bioactivity.projection.assay.ToxcastSummaryPlot;
+import gov.epa.ccte.api.bioactivity.projection.data.ToxcastSummaryPlot;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -52,14 +52,20 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 	List<AedRawDataProjection> findAedDataByDtxsid(@Param("dtxsid") String dtxsid);
 
 	@Query(value = """
-			    SELECT b.dsstox_substance_id AS dsstoxSubstanceId,
-			           d.preferred_name AS preferredName,
-			           b.aeid AS aeid,
-			           b.mc7_param AS mc7Param
-			    FROM invitro.mv_bioactivity b
-			    JOIN ch.v_chemical_details d ON b.dsstox_substance_id = d.dtxsid
-			    WHERE b.dsstox_substance_id IN (:dtxsids) AND b.mc7_param IS NOT NULL
-			    ORDER BY b.dsstox_substance_id
+			SELECT
+			    b.dsstox_substance_id   AS dsstoxSubstanceId,
+			    d.preferred_name        AS preferredName,
+			    b.aeid                  AS aeid,
+			    b.mc7_param             AS mc7Param,
+			    a.assay_component_endpoint_name                 AS aenm
+			FROM invitro.mv_bioactivity b
+			  JOIN ch.v_chemical_details d
+			    ON b.dsstox_substance_id = d.dtxsid
+			  JOIN invitro.mv_assay_annotation a
+			    ON b.aeid = a.aeid
+			WHERE b.dsstox_substance_id IN (:dtxsids)
+			  AND b.mc7_param IS NOT NULL
+			ORDER BY b.dsstox_substance_id
 			""", nativeQuery = true)
 	List<AedRawDataProjection> findAedDataByDtxsidIn(@Param("dtxsids") List<String> dtxsids);
 

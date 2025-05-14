@@ -7,6 +7,8 @@ public interface AedRawDataProjection {
 	String getPreferredName();
 
 	Integer getAeid();
+	
+    String getAenm();
 
 	String getMc7Param();
 }
