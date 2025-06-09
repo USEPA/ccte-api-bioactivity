@@ -220,6 +220,7 @@ public class DataResource implements DataApi {
 			dto.setDtxsid(p.getDsstoxSubstanceId());
 			dto.setPreferredName(p.getPreferredName());
 			dto.setAeid(p.getAeid());
+			dto.setAenm(p.getAenm());
 
 			try {
 				JsonNode node = mapper.readTree(p.getMc7Param());
