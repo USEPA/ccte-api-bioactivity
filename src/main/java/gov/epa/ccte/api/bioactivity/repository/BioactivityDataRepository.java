@@ -113,4 +113,7 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
                 bio.dsstox_substance_id = :dtxsid
     		""", nativeQuery = true)
     List<ToxcastSummaryPlot> findToxcastSummaryPlotByDtxsid(@Param("dtxsid")String dtxsid);
+
+	@Query(value = "select distinct dsstox_substance_id from invitro.mv_bioactivity where aeid = :aeid ", nativeQuery = true)
+	List<String> getChemicalsByAeid(Integer aeid);
 }

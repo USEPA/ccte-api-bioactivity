@@ -1,7 +1,6 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
 import gov.epa.ccte.api.bioactivity.domain.AssayAnnotation;
-import gov.epa.ccte.api.bioactivity.domain.BioactivityAgg;
 import gov.epa.ccte.api.bioactivity.projection.assay.AssayAll;
 import gov.epa.ccte.api.bioactivity.projection.assay.AssayEndpointsList;
 import gov.epa.ccte.api.bioactivity.projection.assay.CcDAssayAnnotation;
@@ -75,7 +74,7 @@ public interface AssayApi {
      */
     @Operation(summary = "Get list of DTXSIDs by aeid")
     @ApiResponses(value= {
-            @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json", schema = @Schema(oneOf = {BioactivityAgg.class})))
+            @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json", schema = @Schema(oneOf = {String.class})))
     })
     @RequestMapping(value = "/chemicals/search/by-aeid/{aeid}", method = RequestMethod.GET)
     @ResponseBody
