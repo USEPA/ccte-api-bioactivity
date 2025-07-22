@@ -70,7 +70,7 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 	List<AedRawDataProjection> findAedDataByDtxsidIn(@Param("dtxsids") List<String> dtxsids);
 
     @Query(value = """
-    		SELECT
+        	SELECT
                 bio.chnm AS chemicalName,
                 bio.dsstox_substance_id AS dtxsid,
                 bio_elem->>'top' AS top,
@@ -102,18 +102,18 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
     List<SummaryByTissue> findByDtxsidAndTissue(@Param("dtxsid")String dtxsid, @Param("tissue")String tissue);
     
     @Query(value = """
-    		SELECT
+        	SELECT
                 bio.aeid AS aeid,
                 json_array_elements(json_build_array(bio.mc5_param))->>'top_over_cutoff' AS topOverCutoff,
                 json_array_elements(json_build_array(bio.mc5_param))->>'ac50' AS AC50,
                 bio.hitc AS hitc
-            FROM 
+            FROM
                 invitro.mv_bioactivity bio
             WHERE
                 bio.dsstox_substance_id = :dtxsid
-    		""", nativeQuery = true)
+    """, nativeQuery = true)
     List<ToxcastSummaryPlot> findToxcastSummaryPlotByDtxsid(@Param("dtxsid")String dtxsid);
 
-	@Query(value = "select distinct dsstox_substance_id from invitro.mv_bioactivity where aeid = :aeid ", nativeQuery = true)
+	@Query(value = "select distinct dsstox_substance_id from invitro.mv_bioactivity where aeid = :aeid and dsstox_substance_id is not null", nativeQuery = true)
 	List<String> getChemicalsByAeid(Integer aeid);
 }
