@@ -104,10 +104,18 @@ public class AssayResource implements AssayApi {
     }
 
     @Override
-    public List<String> chemicalsByAeid(Integer aeid) {
+    public List<?> chemicalsByAeid(Integer aeid, String projection) {
+        log.debug("aeid = {}, projection = {}", aeid, projection);
 
-        log.debug("aeid = {}", aeid);
-        return dataRepository.getChemicalsByAeid(aeid);
+        List<String> dtxsids = dataRepository.getChemicalsByAeid(aeid);
+
+        if (dtxsids.isEmpty()) return List.of();
+
+        return switch (projection.toLowerCase()) {
+            case "ccdassaydetails" -> dataRepository.getFullCcdAssayDetailsByAeid(dtxsids, aeid);
+            case "dtxsidsonly" -> dtxsids;
+            default -> dtxsids;
+        };
     }
 
     @Override
