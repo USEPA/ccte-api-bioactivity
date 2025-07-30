@@ -78,7 +78,8 @@ public interface AssayApi {
     })
     @RequestMapping(value = "/chemicals/search/by-aeid/{aeid}", method = RequestMethod.GET)
     @ResponseBody
-    List<String> chemicalsByAeid(@Parameter(required = true, description = "Numeric assay endpoint identifier", example = "3032") @PathVariable("aeid") Integer aeid);
+    List<?> chemicalsByAeid(@Parameter(required = true, description = "Numeric assay endpoint identifier", example = "3032") @PathVariable("aeid") Integer aeid,
+    		                     @RequestParam(value = "projection", required = false, defaultValue = "dtxsidsonly") String projection);
 
     /**
      * {@code POST  /bioactivity/assay/by-aeid/} : get assay annotation for the batch of "aeids".
