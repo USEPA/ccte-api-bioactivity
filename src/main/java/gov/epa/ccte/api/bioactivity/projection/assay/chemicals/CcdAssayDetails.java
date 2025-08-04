@@ -84,6 +84,6 @@ public interface CcdAssayDetails {
 
 	Double getLogAc50();
 
-	Double getHitc();
+	String getHitc();
 
 }
