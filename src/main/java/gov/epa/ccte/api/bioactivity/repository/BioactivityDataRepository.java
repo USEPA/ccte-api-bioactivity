@@ -186,7 +186,10 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		        cd.is_markush AS isMarkush,
 
 		        -- Assay fields from mc5_param JSON
-		        b.hitc AS hitc,
+		        CASE
+                    WHEN b.hitc >= 0.9 THEN 'Active'
+                    ELSE 'Inactive'
+                END AS hitc,
 		        b.mc5_param->>'top' AS top,
 		        b.mc5_param->>'top_over_cutoff' AS scaledTop,
 		        b.mc5_param->>'ac50' AS ac50,
@@ -199,7 +202,6 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		    JOIN invitro.mv_bioactivity b
 		        ON b.dsstox_substance_id = cd.dtxsid
 		    WHERE b.aeid = :aeid
-		    ORDER BY cd.dtxsid
 		""", nativeQuery = true)
 		List<CcdAssayDetails> getFullCcdAssayDetailsByAeid(
 		    @Param("aeid") Integer aeid
