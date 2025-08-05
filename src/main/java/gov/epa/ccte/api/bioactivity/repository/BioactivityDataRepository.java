@@ -188,7 +188,9 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		        -- Assay fields from mc5_param JSON
 		        CASE
                     WHEN b.hitc >= 0.9 THEN 'Active'
-                    ELSE 'Inactive'
+                    WHEN b.hitc >= 0 AND b.hitc < 0.9 THEN 'Inactive'
+                    WHEN b.hitc < 0 THEN 'NA'
+                    ELSE 'NA'
                 END AS hitc,
 		        b.mc5_param->>'top' AS top,
 		        b.mc5_param->>'top_over_cutoff' AS scaledTop,
