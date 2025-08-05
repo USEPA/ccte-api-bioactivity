@@ -186,12 +186,13 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		        cd.is_markush AS isMarkush,
 
 		        -- Assay fields from mc5_param JSON
+		        b.hitc As hitc,
 		        CASE
                     WHEN b.hitc >= 0.9 THEN 'Active'
                     WHEN b.hitc >= 0 AND b.hitc < 0.9 THEN 'Inactive'
                     WHEN b.hitc < 0 THEN 'NA'
                     ELSE 'NA'
-                END AS hitc,
+                END AS hitCall,
 		        b.mc5_param->>'top' AS top,
 		        b.mc5_param->>'top_over_cutoff' AS scaledTop,
 		        b.mc5_param->>'ac50' AS ac50,
