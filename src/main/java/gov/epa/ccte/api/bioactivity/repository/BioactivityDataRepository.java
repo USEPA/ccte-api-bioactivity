@@ -189,9 +189,7 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		        b.hitc As hitc,
 		        CASE
                     WHEN b.hitc >= 0.9 THEN 'Active'
-                    WHEN b.hitc >= 0 AND b.hitc < 0.9 THEN 'Inactive'
-                    WHEN b.hitc < 0 THEN 'NA'
-                    ELSE 'NA'
+                    ELSE 'Inactive'
                 END AS hitCall,
 		        b.mc5_param->>'top' AS top,
 		        b.mc5_param->>'top_over_cutoff' AS scaledTop,
