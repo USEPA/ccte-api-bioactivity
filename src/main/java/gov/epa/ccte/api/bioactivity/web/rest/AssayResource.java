@@ -17,25 +17,27 @@ import java.util.List;
 @RestController
 public class AssayResource implements AssayApi {
     final private AssayAnnotationRepository annotationRepository;
-    
-    final private BioactivityAggRepository bioactivityAggRepository;
     final private AssayAnnotationAggRepository assayAnnotationAggRepository;
     final private AOPRepository aopRepository;
-
     private final AssayService assayService;
-
+    private final BioactivityDataRepository dataRepository;
     private final BioactivityScRepository bioactivityScRepository;
 
-    
+
     @Value("200")
     private Integer batchSize;
-    
-    public AssayResource(AssayAnnotationRepository annotationRepository, BioactivityAggRepository bioactivityAggRepository, AssayAnnotationAggRepository assayAnnotationAggRepository, AOPRepository aopRepository, AssayService assayService, BioactivityScRepository bioactivityScRepository) {
+
+    public AssayResource(AssayAnnotationRepository annotationRepository,
+                         AssayAnnotationAggRepository assayAnnotationAggRepository,
+                         AOPRepository aopRepository, AssayService assayService,
+                         BioactivityDataRepository dataRepository,
+                         BioactivityScRepository bioactivityScRepository) {
+
         this.annotationRepository = annotationRepository;
-		this.bioactivityAggRepository = bioactivityAggRepository;
-		this.assayAnnotationAggRepository = assayAnnotationAggRepository;
+        this.assayAnnotationAggRepository = assayAnnotationAggRepository;
         this.aopRepository = aopRepository;
         this.assayService = assayService;
+        this.dataRepository = dataRepository;
         this.bioactivityScRepository = bioactivityScRepository;
     }
 
@@ -45,7 +47,7 @@ public class AssayResource implements AssayApi {
 
         if (projection == null || projection.isEmpty()) {
             AssayAll result = annotationRepository.findByAeid(aeid, AssayAll.class);
-            return result != null ? List.of(result) : List.of(); 
+            return result != null ? List.of(result) : List.of();
         }
 
         Object result = switch (projection) {
@@ -61,18 +63,18 @@ public class AssayResource implements AssayApi {
         if (result instanceof List<?>) {
             return (List<?>) result;
         } else if (result != null) {
-            return List.of(result); 
+            return List.of(result);
         } else {
-            return List.of(); 
+            return List.of();
         }
     }
-    
+
     @Override
     public @ResponseBody
-    List<AssayAll>batchSearchAssayByAeid(String[] aeids) {
+    List<AssayAll> batchSearchAssayByAeid(String[] aeids) {
         log.debug("bioactiivty data for aeid size = {}", aeids.length);
 
-        if(aeids.length > batchSize)
+        if (aeids.length > batchSize)
             throw new HigherNumberOfRequestsException(aeids.length, batchSize);
 
         List<AssayAll> data = annotationRepository.findByAeidInOrderByAeidAsc(aeids, AssayAll.class);
@@ -90,33 +92,38 @@ public class AssayResource implements AssayApi {
     }
 
     @Override
-    public List<?> allAssays( String projection) {
+    public List<?> allAssays(String projection) {
 
-    	return switch (projection) {
-        case "ccd-assay-list" -> assayService.wrapCcdAssayList(annotationRepository.findAssayAnnotations(CcdAssayList.class));
-        case "assay-all" -> annotationRepository.findBy(AssayAll.class);
-		default -> annotationRepository.findBy(AssayAll.class);
-    };  
-    
+        return switch (projection) {
+            case "ccd-assay-list" ->
+                    assayService.wrapCcdAssayList(annotationRepository.findAssayAnnotations(CcdAssayList.class));
+            case "assay-all" -> annotationRepository.findBy(AssayAll.class);
+            default -> annotationRepository.findBy(AssayAll.class);
+        };
+
     }
 
-	@Override
-	public List<String> chemicalsByAeid(Integer aeid) {
-		
-        log.debug("aeid = {}", aeid);
-        return bioactivityAggRepository.getChemicalsByAeid(aeid);
-	}
-	
-	@Override
-	public List<AssayEndpointsList> assayEndpointsListByGene(String geneSymbol) {
-		
+    @Override
+    public List<?> chemicalsByAeid(Integer aeid, String projection) {
+        log.debug("aeid = {}, projection = {}", aeid, projection);
+
+        return switch (projection.toLowerCase()) {
+            case "ccdassaydetails" -> dataRepository.getFullCcdAssayDetailsByAeid(aeid);
+            case "dtxsidsonly" -> dataRepository.getChemicalsByAeid(aeid);
+            default -> dataRepository.getChemicalsByAeid(aeid);
+        };
+    }
+
+    @Override
+    public List<AssayEndpointsList> assayEndpointsListByGene(String geneSymbol) {
+
         log.debug("aeid = {}", geneSymbol);
         return annotationRepository.findAssayEndpointsListByGene(geneSymbol);
-	}
-	
-	@Override
-	public Long assayCount() {
+    }
+
+    @Override
+    public Long assayCount() {
 
         return annotationRepository.count();
-	}
+    }
 }
