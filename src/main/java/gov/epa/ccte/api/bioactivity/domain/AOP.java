@@ -13,7 +13,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "mv_toxcast_aop_map", schema = "aop")
 public class AOP {
+	
     @Id
+    private Integer  id;
+    
     @Column(name = "toxcast_aeid")
     private Integer toxcastAeid;
     
