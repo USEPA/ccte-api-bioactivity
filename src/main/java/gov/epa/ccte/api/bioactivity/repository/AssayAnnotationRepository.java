@@ -56,7 +56,7 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
         <T> List<T> findAssayAnnotations(Class<T> type);
 
     @Query(value = """
-            SELECT 
+            SELECT maa.aeid,
                 maa.assay_component_endpoint_name AS assayComponentEndpointName,
             CASE 
             	WHEN agg.active_mc IS NOT NULL THEN CONCAT(agg.active_mc, '/', agg.total_mc, '(', CAST(CAST(ROUND((agg.active_mc/agg.total_mc*100),2) AS DECIMAL(5,2)) AS varchar(5)), '%)')

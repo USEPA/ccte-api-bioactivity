@@ -22,7 +22,11 @@ public class SearchAssay {
 	@NotNull
 	@Column(name = "id")
 	private Integer id;
-	
+
+	@NotNull
+	@Column(name = "aeid")
+	private Integer aeid;
+
 	@Size(max = 50)
 	@Column(name = "search_name")
 	private String searchName;
