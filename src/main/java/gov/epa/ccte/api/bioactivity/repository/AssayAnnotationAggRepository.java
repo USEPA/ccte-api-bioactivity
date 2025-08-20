@@ -167,16 +167,19 @@ public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotat
 	List<CcdTcplData> findTcplByAeid(@Param("aeid") Integer aeid);
 
 	@Query(value = """
-		select row_number() over (
-			order by key_assay_reagent_type, key_assay_reagent) as orderId,
-			   key_assay_reagent_type                           as reagentType,
-			   key_assay_reagent                                as reagentValue,
-			   technological_target_type                        as cultureOrAssay
-		from (select key_assay_reagent_type, key_assay_reagent, technological_target_type
-			  from invitro.mv_assay_annotation maa
-			  where aeid = :aeid
-			  group by key_assay_reagent_type, key_assay_reagent, technological_target_type) reagent
-	""", nativeQuery = true)
-	List<CcdReagents> findReagentByAeid(@Param("aeid") Integer aeid);
+		    SELECT 
+		        row_number() OVER (
+		            ORDER BY 
+		                reagent ->> 'reagent_name_value_type', 
+		                reagent ->> 'reagent_name_value'
+		        ) AS orderId,
+		        reagent ->> 'reagent_name_value_type' AS reagentType,
+		        reagent ->> 'reagent_name_value' AS reagentValue,
+		        reagent ->> 'culture_or_assay' AS cultureOrAssay
+		    FROM invitro.mv_assay_annotation maa,
+		         jsonb_array_elements(assay_reagent\\:\\:jsonb) AS reagent
+		    WHERE maa.aeid = :aeid
+		""", nativeQuery = true)
+		List<CcdReagents> findReagentByAeid(@Param("aeid") Integer aeid);
 
 }
