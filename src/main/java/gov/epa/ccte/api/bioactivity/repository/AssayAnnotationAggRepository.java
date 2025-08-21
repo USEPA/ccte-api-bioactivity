@@ -95,76 +95,84 @@ public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotat
 	List<CcdAssayGene> findGeneByAeid(@Param("aeid") Integer aeid);
 
 	@Query(value = """
-
-				select row_number() over (order by methodName) as orderId, assayRunType, assayRunType, methodName, description, levelApplied
-				from (select aeid,
-							 'multi'                    as assayRunType,
-							 2                          as levelApplied,
-							 element_mc2 ->> 'mc2_mthd' as methodName,
-							 element_mc2 ->> 'desc'     as description
-					  from invitro.mv_assay_annotation maa,
-						   jsonb_array_elements(mc2_methods\\:\\:jsonb) as element_mc2
-					  where mc2_methods is not null
-					  union
-					  select aeid,
-							 'multi'                    as assayRunType,
-							 3                          as levelApplied,
-							 element_mc3 ->> 'mc3_mthd' as methodName,
-							 element_mc3 ->> 'desc'     as description
-					  from invitro.mv_assay_annotation maa,
-						   jsonb_array_elements(mc3_methods\\:\\:jsonb) as element_mc3
-					  where mc3_methods is not null
-					  union
-					  select aeid,
-							 'multi'                    as assayRunType,
-							 4                          as levelApplied,
-							 element_mc4 ->> 'mc4_mthd' as methodName,
-							 element_mc4 ->> 'desc'     as description
-					  from invitro.mv_assay_annotation maa,
-						   jsonb_array_elements(mc4_methods\\:\\:jsonb) as element_mc4
-					  where mc4_methods is not null
-					  union
-					  select aeid,
-							 'multi'                    as assayRunType,
-							 5                          as levelApplied,
-							 element_mc5 ->> 'mc5_mthd' as methodName,
-							 element_mc5 ->> 'desc'     as description
-					  from invitro.mv_assay_annotation maa,
-						   jsonb_array_elements(mc5_methods\\:\\:jsonb) as element_mc5
-					  where mc5_methods is not null
-					  union
-					  select aeid,
-							 'multi'                    as assayRunType,
-							 6                          as levelApplied,
-							 element_mc6 ->> 'mc6_mthd' as methodName,
-							 element_mc6 ->> 'desc'     as description
-					  from invitro.mv_assay_annotation maa,
-						   jsonb_array_elements(mc6_methods\\:\\:jsonb) as element_mc6
-					  where mc6_methods is not null
-					  union
-					  select aeid,
-							 'single'                   as assayRunType,
-							 1                          as levelApplied,
-							 element_sc1 ->> 'sc1_mthd' as methodName,
-							 element_sc1 ->> 'desc'     as description
-					  from invitro.mv_assay_annotation maa,
-						   jsonb_array_elements(sc1_methods\\:\\:jsonb) as element_sc1
-					  where element_sc1 ->> 'sc1_mthd' is not null
-						 or element_sc1 ->> 'desc' is not null
-					  union
-					  select aeid,
-							 'single'                   as assayRunType,
-							 2                          as levelApplied,
-							 element_sc2 ->> 'sc2_mthd' as methodName,
-							 element_sc2 ->> 'desc'     as description
-					  from invitro.mv_assay_annotation maa,
-						   jsonb_array_elements(sc2_methods\\:\\:jsonb) as element_sc2
-					  where element_sc2 ->> 'sc2_mthd' is not null
-						 or element_sc2 ->> 'desc' is not null) tcpl
-				where aeid = :aeid
-				ORDER BY assayRunType, assayRunType, methodName, description;
-	""", nativeQuery = true)
-	List<CcdTcplData> findTcplByAeid(@Param("aeid") Integer aeid);
+		    select row_number() over (
+		               order by assayRunType, levelApplied, methodName
+		           ) as orderId,
+		           assayRunType,
+		           assayRunType,
+		           methodName,
+		           description,
+		           levelApplied
+		    from (
+		        select aeid,
+		               'multi'                    as assayRunType,
+		               2                          as levelApplied,
+		               element_mc2 ->> 'mc2_mthd' as methodName,
+		               element_mc2 ->> 'desc'     as description
+		        from invitro.mv_assay_annotation maa,
+		             jsonb_array_elements(mc2_methods::jsonb) as element_mc2
+		        where mc2_methods is not null
+		        union
+		        select aeid,
+		               'multi',
+		               3,
+		               element_mc3 ->> 'mc3_mthd',
+		               element_mc3 ->> 'desc'
+		        from invitro.mv_assay_annotation maa,
+		             jsonb_array_elements(mc3_methods::jsonb) as element_mc3
+		        where mc3_methods is not null
+		        union
+		        select aeid,
+		               'multi',
+		               4,
+		               element_mc4 ->> 'mc4_mthd',
+		               element_mc4 ->> 'desc'
+		        from invitro.mv_assay_annotation maa,
+		             jsonb_array_elements(mc4_methods::jsonb) as element_mc4
+		        where mc4_methods is not null
+		        union
+		        select aeid,
+		               'multi',
+		               5,
+		               element_mc5 ->> 'mc5_mthd',
+		               element_mc5 ->> 'desc'
+		        from invitro.mv_assay_annotation maa,
+		             jsonb_array_elements(mc5_methods::jsonb) as element_mc5
+		        where mc5_methods is not null
+		        union
+		        select aeid,
+		               'multi',
+		               6,
+		               element_mc6 ->> 'mc6_mthd',
+		               element_mc6 ->> 'desc'
+		        from invitro.mv_assay_annotation maa,
+		             jsonb_array_elements(mc6_methods::jsonb) as element_mc6
+		        where mc6_methods is not null
+		        union
+		        select aeid,
+		               'single',
+		               1,
+		               element_sc1 ->> 'sc1_mthd',
+		               element_sc1 ->> 'desc'
+		        from invitro.mv_assay_annotation maa,
+		             jsonb_array_elements(sc1_methods::jsonb) as element_sc1
+		        where element_sc1 ->> 'sc1_mthd' is not null
+		           or element_sc1 ->> 'desc' is not null
+		        union
+		        select aeid,
+		               'single',
+		               2,
+		               element_sc2 ->> 'sc2_mthd',
+		               element_sc2 ->> 'desc'
+		        from invitro.mv_assay_annotation maa,
+		             jsonb_array_elements(sc2_methods::jsonb) as element_sc2
+		        where element_sc2 ->> 'sc2_mthd' is not null
+		           or element_sc2 ->> 'desc' is not null
+		    ) tcpl
+		    where aeid = :aeid
+		    order by assayRunType, levelApplied, methodName
+		    """, nativeQuery = true)
+		List<CcdTcplData> findTcplByAeid(@Param("aeid") Integer aeid);
 
 	@Query(value = """
 		    SELECT 
