@@ -202,6 +202,7 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		    FROM ch.v_chemical_details cd
 		    JOIN invitro.mv_bioactivity b
 		        ON b.dsstox_substance_id = cd.dtxsid
+		        AND b.chid_rep = 1
 		    WHERE b.aeid = :aeid
 		""", nativeQuery = true)
 		List<CcdAssayDetails> getFullCcdAssayDetailsByAeid(
