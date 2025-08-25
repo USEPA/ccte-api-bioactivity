@@ -1,61 +1,30 @@
 package gov.epa.ccte.api.bioactivity.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "api_keys")
+@Table(name = "api_keys", schema = "app")
 public class ApiKey {
     @Id
     @Column(name = "api_key", nullable = false)
     private UUID id;
 
-    @Size(max = 255)
-    @Column(name = "email")
-    private String email;
-
-    @Size(max = 200)
-    @Column(name = "reference", length = 200)
-    private String reference;
+    @Size(max = 10)
+    @Column(name = "data_scope", length = 10)
+    private String dataScope;
 
     @Column(name = "created_on")
     private LocalDate createdOn;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
-
-    public LocalDate getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDate createdOn) {
-        this.createdOn = createdOn;
-    }
 
 }

@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+<button id="api-call-btn">Call API</button>
+<div id="response"></div>
+<!-- https://api-ccte-stg.epa.gov/bioactivity/search/by-dtxsid/DTXSID0020020?x-api-key=2dde2929-c589-43aa-ba43-b38761f7299d -->
+<!-- https://api-ccte-stg.epa.gov/chemical/search/start-with/bpa?x-api-key=2dde2929-c589-43aa-ba43-b38761f7299d-->
+<!--http://localhost:9300/chemical/search/start-with/bpa?x-api-key=2dde2929-c589-43aa-ba43-b38761f7299d-->
+<!--https://api-ccte-stg.epa.gov/hazard/search/by-dtxsid/DTXSID0020020?x-api-key=2dde2929-c589-43aa-ba43-b38761f7299d-->
+<script>
+    document.getElementById("api-call-btn").addEventListener("click", function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://localhost:9300/chemical/search/start-with/bpa?x-api-key=2dde2929-c589-43aa-ba43-b38761f7299d");
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                document.getElementById("response").innerHTML = xhr.responseText;
+            } else {
+                document.getElementById("response").innerHTML = "Error: " + xhr.statusText;
+            }
+        };
+        xhr.onerror = function () {
+            document.getElementById("response").innerHTML = "Error: " + xhr.statusText;
+        };
+        xhr.send();
+    });
+</script>
+</body>
+</html>

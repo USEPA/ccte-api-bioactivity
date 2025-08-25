@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: hazard
+  jackson:
+    serialization:
+      indent-output: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: org.testcontainers.jdbc.ContainerDatabaseDriver
+    hikari:
+      auto-commit: false
+  sql:
+    init:
+      mode: always
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.default_schema: bio4_1
+      hibernate.ddl-auto: validate
+
+# logging
+logging:
+  level:
+    com.zaxxer.hikari.HikariConfig: info
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    gov.epa.ccte.api.*: debug
+    org.springframework: warn
+
+#      #
+#      jakarta:
+#        persistence:
+#          schema-generation:
+#            scripts:
+#              action: create
+#              create-target: create.sql
+#              create-source: metadata
+
+
+
+

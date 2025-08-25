@@ -10,6 +10,9 @@ spring:
     name: bioactivity
   jmx:
     enabled: false
+  mvc:
+    problemdetails:
+      enabled: false
   data:
     jpa:
       repositories:
@@ -20,7 +23,7 @@ spring:
       hibernate.jdbc.time_zone: UTC
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
-      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_second_level_cache: true
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
       # modify batch size as necessary
@@ -32,7 +35,7 @@ spring:
     hibernate:
       ddl-auto: none
       naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
   task:
     execution:
@@ -55,7 +58,7 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
-
+  remove-broken-reference-definitions: false
 server:
   servlet:
     session:
@@ -73,6 +76,10 @@ server:
 
 application:
   api-key-name: "x-api-key"
+  api-env: "Production Environment"
+  api-url: "https://api-ccte.epa.gov"
+  batch-size: 200
+
 # CORS is disabled by default on microservices, as you should access them through a gateway.
 # If you want to enable it, please uncomment the configuration below.
 # cors:

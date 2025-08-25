@@ -1,76 +1,45 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
-import gov.epa.ccte.api.bioactivity.domain.Bioactivity;
-import gov.epa.ccte.api.bioactivity.dto.BioactivityDto;
-import gov.epa.ccte.api.bioactivity.dto.mapper.BioactivityMapper;
-import gov.epa.ccte.api.bioactivity.repository.BioactivityRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST controller for getting the {@link gov.epa.ccte.api.bioactivity.domain.Bioactivity}s.
+ * REST controller for getting the {@link BioactivityResource}s.
  */
-@Tag(name = "Bioactivity Resource",
-        description = "API endpoints for collecting Bioactivity data for specified chemical identifier (DTXSID).")
-@SecurityRequirement(name = "api_key")
 @Slf4j
 @RestController
 @CrossOrigin
+@Hidden // OpenAPI annotation for hidding endpoints from documentation generator
 public class BioactivityResource {
+    private final JdbcTemplate jdbcTemplate;
 
-    final private BioactivityRepository repository;
-    final private BioactivityMapper mapper;
-
-    public BioactivityResource(BioactivityRepository repository, BioactivityMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
+    public BioactivityResource(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    /**
-     * {@code GET  /bioactivity/by-dtxsid/:dtxsid} : get list of bioactivity for the "dtxsid".
-     *
-     * @param dtxsid the matching dtxsid of the Bioactivity to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the list of chemicalDetail}.
-     */
-    @Operation(summary = "Get bioactivity data by dtxsid")
-    @RequestMapping(value = "bioactivity/search/by-dtxsid/{dtxsid}", method = RequestMethod.GET)
-    public @ResponseBody
-    List<BioactivityDto> bioactivityByDtxsid(@PathVariable("dtxsid") String dtxsid) throws IOException {
 
-        log.debug("dtxsid = {}", dtxsid);
-        List<Bioactivity> data = repository.findByDtxsid(dtxsid);
+    @GetMapping("/bioactivity/health")
+    public ResponseEntity health(){
 
-        return data.stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
+        log.info("checking the health");
+
+        if(jdbcTemplate != null){
+            try {
+                jdbcTemplate.execute("SELECT 1 ");
+                log.debug("DB connection established");
+
+                return ResponseEntity.ok().build();
+
+            } catch (Exception ep){
+                return ResponseEntity.notFound().build();
+            }
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
-    /**
-     * {@code GET  /bioactivity/by-aeid/:aeid} : get list of bioactivity for the "aeid".
-     *
-     * @param aeid the matching aeid of the Bioactivity to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the list of bioactivity}.
-     */
-    @Operation(summary = "Get bioactivity data by aeid")
-    @RequestMapping(value = "bioactivity/search/by-aeid/{aeid}", method = RequestMethod.GET)
-    public @ResponseBody
-    List<BioactivityDto> bioactivityByAeid(@PathVariable("aeid") Integer aeid) throws IOException {
-
-        log.debug("aeid = {}", aeid);
-
-        List<Bioactivity> data = repository.findByAeid(aeid);
-
-        return data.stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
-    }
-
 }
