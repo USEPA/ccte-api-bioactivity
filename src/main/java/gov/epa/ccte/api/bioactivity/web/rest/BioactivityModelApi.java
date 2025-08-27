@@ -44,4 +44,21 @@ public interface BioactivityModelApi {
     @ResponseBody
     List<BioactivityModel> getBioactivityModelByDtxsid(@Parameter(required = true, description = "dtxsid", example = "DTXSID7020182")@PathVariable("dtxsid") String dtxsid);
     
+    /**
+     * {@code GET  /bioactivity/models/search/ : get toxcast models for the "dtxsid" and "model".
+     *
+     * @param dtxsid the matching dtxsid and model of the Models to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the toxcast models.
+     */
+    @Operation(summary = "Get toxcast model by dtxsid and model", description = "Return toxcast model for given dtxsid and model", tags = {"bioactivity", "model"})
+    @ApiResponses(value= {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content( mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = BioactivityModel.class))))
+    })
+    @RequestMapping(value = "/search/",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    List<BioactivityModel> getBioactivityModelByDtxsidAndModel(@Parameter(required = true, description = "dtxsid", example = "DTXSID7020182")String dtxsid,
+    		@Parameter(required = true, description = "model", example = "CERAPP ")String model);
+    
 }

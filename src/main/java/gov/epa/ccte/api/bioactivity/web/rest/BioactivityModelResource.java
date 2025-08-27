@@ -30,4 +30,14 @@ public class BioactivityModelResource implements BioactivityModelApi{
         return data;
     }
 
+    @Override
+    public @ResponseBody
+    List<BioactivityModel> getBioactivityModelByDtxsidAndModel(String dtxsid, String model) {
+
+        log.debug("Find Bioactivity Model for dtxsid = {} and model = {}", dtxsid, model);
+
+        List<BioactivityModel> data = repository.findByDtxsidAndModelContaining(dtxsid, model);
+
+        return data;
+    }
 }
