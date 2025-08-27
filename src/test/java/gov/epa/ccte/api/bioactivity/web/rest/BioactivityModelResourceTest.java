@@ -55,12 +55,27 @@ public class BioactivityModelResourceTest {
     }
     
     @Test
-    void testGetBioactivityModelByDtxsidGet() throws Exception {
+    void testGetBioactivityModelByDtxsid() throws Exception {
         final List<BioactivityModel> data = Collections.singletonList(model);
 
         when(repository.findByDtxsid("DTXSID7020182")).thenReturn(data);
 
         mockMvc.perform(get("/bioactivity/models/search/by-dtxsid/{dtxsid}", "DTXSID7020182"))
+				.andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].dtxsid").value(model.getDtxsid()));
+
+    }
+    
+    @Test
+    void testGetBioactivityModelByDtxsidAndModel() throws Exception {
+        final List<BioactivityModel> data = Collections.singletonList(model);
+
+        when(repository.findByDtxsidAndModelContaining("DTXSID7020182", "CERAPP")).thenReturn(data);
+
+        mockMvc.perform(get("/bioactivity/models/search/")
+        		.param("dtxsid", "DTXSID7020182")
+        		.param("model", "CERAPP"))
 				.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].dtxsid").value(model.getDtxsid()));

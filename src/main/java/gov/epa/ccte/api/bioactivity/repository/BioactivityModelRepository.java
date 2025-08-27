@@ -15,4 +15,7 @@ public interface BioactivityModelRepository extends JpaRepository<BioactivityMod
     @Transactional(readOnly = true)
     List<BioactivityModel> findByDtxsid(String dtxsid);
     
+    @Transactional(readOnly = true)
+    List<BioactivityModel> findByDtxsidAndModelContaining(String dtxsid, String model);
+    
 }
