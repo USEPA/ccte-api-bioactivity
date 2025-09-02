@@ -27,7 +27,7 @@ public interface BioactivityScRepository extends JpaRepository<BioactivitySc, Lo
                      left join ch.v_chemical_details cd on cd.dtxsid = sc.dsstox_substance_id
             where sc.aeid = :aeid and sc.chid_rep = 1
             """, nativeQuery = true)
-    List<CcdSingleConcData> getSigleConcDataByAeid(Integer aeid);
+    List<CcdSingleConcData> getSingleConcDataByAeid(Integer aeid);
 
     List<BioactivitySc> findByAeidAndChidRep(Integer aeid, Short chidRep);
 }
