@@ -1,7 +1,7 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
 import gov.epa.ccte.api.bioactivity.domain.AedData;
-import gov.epa.ccte.api.bioactivity.domain.AssayListCount;
+import gov.epa.ccte.api.bioactivity.domain.AssayAgg;
 import gov.epa.ccte.api.bioactivity.domain.ChemicalAgg;
 import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataBase;
 import gov.epa.ccte.api.bioactivity.projection.data.SummaryByTissue;
@@ -181,11 +181,11 @@ public interface DataApi {
     @Operation(summary = "Get summary by aeid", description = "Return summary data for given aeid", tags = {"bioactivity", "data"})
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
-                    schema=@Schema(oneOf = {AssayListCount.class}))),
+                    schema=@Schema(oneOf = {AssayAgg.class}))),
     })
     @RequestMapping(value = "/summary/search/by-aeid/{aeid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
-    AssayListCount summaryByAeid(@Parameter(required = true, description = "Numeric assay endpoint identifier", example = "3032")
+    AssayAgg summaryByAeid(@Parameter(required = true, description = "Numeric assay endpoint identifier", example = "3032")
                                  @PathVariable("aeid") Integer aeid);
     
     /**

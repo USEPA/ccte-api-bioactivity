@@ -1,12 +1,12 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
 import gov.epa.ccte.api.bioactivity.domain.AedData;
-import gov.epa.ccte.api.bioactivity.domain.AssayListCount;
+import gov.epa.ccte.api.bioactivity.domain.AssayAgg;
 import gov.epa.ccte.api.bioactivity.projection.data.AedRawDataProjection;
 import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataAll;
 import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataBase;
 import gov.epa.ccte.api.bioactivity.projection.data.SummaryByTissue;
-import gov.epa.ccte.api.bioactivity.repository.AssayListCountRepository;
+import gov.epa.ccte.api.bioactivity.repository.AssayAggRepository;
 import gov.epa.ccte.api.bioactivity.repository.BioactivityDataRepository;
 import gov.epa.ccte.api.bioactivity.repository.ChemicalAggRepository;
 import gov.epa.ccte.api.bioactivity.web.rest.error.HigherNumberOfRequestsException;
@@ -26,15 +26,15 @@ import java.util.List;
 public class DataResource implements DataApi {
 
     private final BioactivityDataRepository dataRepository;
-    private final AssayListCountRepository countRepository;
+    private final AssayAggRepository assayAggRepository;
     private final ChemicalAggRepository chemAggRepository;
     
     @Value("200")
     private Integer batchSize;
     
-    public DataResource(BioactivityDataRepository dataRepository, AssayListCountRepository countRepository, ChemicalAggRepository chemAggRepository) {
+    public DataResource(BioactivityDataRepository dataRepository, AssayAggRepository assayAggRepository, ChemicalAggRepository chemAggRepository) {
         this.dataRepository = dataRepository;
-        this.countRepository = countRepository;
+        this.assayAggRepository = assayAggRepository;
         this.chemAggRepository = chemAggRepository;
     }
 
@@ -151,11 +151,11 @@ public class DataResource implements DataApi {
 
     @Override
     public @ResponseBody
-    AssayListCount summaryByAeid(Integer aeid) {
+    AssayAgg summaryByAeid(Integer aeid) {
 
         log.debug("aeid = {}", aeid);
 
-         return countRepository.findByAeid(aeid);
+         return assayAggRepository.findByAeid(aeid);
     }
     
     @Override
