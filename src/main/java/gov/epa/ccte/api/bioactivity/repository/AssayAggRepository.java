@@ -14,7 +14,7 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 
-	<T> T findByAeid(Integer aeid);
+	<T>List<T> findByAeid(Integer aeid);
 	
 @Query(value = """   
    			SELECT aeid,

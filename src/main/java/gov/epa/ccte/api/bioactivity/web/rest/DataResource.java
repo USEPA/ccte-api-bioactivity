@@ -4,7 +4,6 @@ import gov.epa.ccte.api.bioactivity.domain.AedData;
 import gov.epa.ccte.api.bioactivity.domain.AssayAgg;
 import gov.epa.ccte.api.bioactivity.projection.data.AedRawDataProjection;
 import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataAll;
-import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataBase;
 import gov.epa.ccte.api.bioactivity.projection.data.SummaryByTissue;
 import gov.epa.ccte.api.bioactivity.repository.AssayAggRepository;
 import gov.epa.ccte.api.bioactivity.repository.BioactivityDataRepository;
@@ -127,18 +126,18 @@ public class DataResource implements DataApi {
 
     @Override
     public @ResponseBody
-    BioactivityDataBase dataByM4Id(Integer m4id) {
+    List dataByM4Id(Integer m4id) {
 
         log.debug("m4id = {}", m4id);
 
-        BioactivityDataAll data = dataRepository.findByM4id(m4id, BioactivityDataAll.class);
+        List<BioactivityDataAll> data = (dataRepository.findByM4id(m4id, BioactivityDataAll.class));
 
         return data;
     }
     
     @Override
     public @ResponseBody
-    List<BioactivityDataAll>batchSearchDataByM4id(String[] m4ids) {
+    List<BioactivityDataAll> batchSearchDataByM4id(String[] m4ids) {
         log.debug("bioactiivty data for m4ids size = {}", m4ids.length);
 
         if(m4ids.length > batchSize)
@@ -151,11 +150,12 @@ public class DataResource implements DataApi {
 
     @Override
     public @ResponseBody
-    AssayAgg summaryByAeid(Integer aeid) {
-
+    List<AssayAgg> summaryByAeid(Integer aeid) {
         log.debug("aeid = {}", aeid);
+        
+        List<AssayAgg> data = assayAggRepository.findByAeid(aeid);
 
-         return assayAggRepository.findByAeid(aeid);
+         return data;
     }
     
     @Override
@@ -205,11 +205,11 @@ public class DataResource implements DataApi {
 	}
 
 	@Override
-	public @ResponseBody List<AedData> getAedDataForBatchDtxsids(List<String> dtxsids) {
-		log.debug("Fetching AED data for dtxsids size = {}", dtxsids.size());
+	public @ResponseBody List<AedData> getAedDataForBatchDtxsids(String[] dtxsids) {
+		log.debug("Fetching AED data for dtxsids size = {}", dtxsids.length);
 
-		if (dtxsids.size() > batchSize) {
-			throw new HigherNumberOfRequestsException(dtxsids.size(), batchSize);
+		if (dtxsids.length > batchSize) {
+			throw new HigherNumberOfRequestsException(dtxsids.length, batchSize);
 		}
 
 		List<AedRawDataProjection> results = dataRepository.findAedDataByDtxsidIn(dtxsids);
