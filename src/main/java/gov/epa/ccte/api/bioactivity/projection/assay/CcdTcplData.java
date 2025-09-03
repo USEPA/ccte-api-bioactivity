@@ -7,4 +7,10 @@ public interface CcdTcplData {
     Integer getLevelApplied();
     String getMethodName();
     String getDescription();
+    
+    Void setOrderId(Integer orderId);
+    Void setAssayRunType(String assayRunType);
+    Void setLevelApplied(Integer levelApplied);
+    Void setMethodName(String methodName);
+    Void setDescription(String description);
 }
