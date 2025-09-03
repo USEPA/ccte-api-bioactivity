@@ -3,7 +3,6 @@ package gov.epa.ccte.api.bioactivity.web.rest;
 import gov.epa.ccte.api.bioactivity.domain.AedData;
 import gov.epa.ccte.api.bioactivity.domain.AssayAgg;
 import gov.epa.ccte.api.bioactivity.domain.ChemicalAgg;
-import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataBase;
 import gov.epa.ccte.api.bioactivity.projection.data.SummaryByTissue;
 import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataAll;
 import io.swagger.v3.oas.annotations.Operation;
