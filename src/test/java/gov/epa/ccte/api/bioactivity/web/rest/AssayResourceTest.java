@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.Mockito.when;
 
 import gov.epa.ccte.api.bioactivity.repository.AssayAnnotationRepository;
-import gov.epa.ccte.api.bioactivity.repository.AssayAnnotationAggRepository;
+import gov.epa.ccte.api.bioactivity.repository.AssayAggRepository;
 import gov.epa.ccte.api.bioactivity.repository.AOPRepository;
 import gov.epa.ccte.api.bioactivity.repository.BioactivityDataRepository;
 import gov.epa.ccte.api.bioactivity.repository.BioactivityScRepository;
@@ -53,7 +53,7 @@ public class AssayResourceTest {
     @MockitoBean
     private AssayAnnotationRepository assayAnnotationRepository;
     @MockitoBean
-    private AssayAnnotationAggRepository assayAggRepository;
+    private AssayAggRepository assayAggRepository;
     @MockitoBean
     private AOPRepository aopRepository;
     @MockitoBean
@@ -539,7 +539,7 @@ public class AssayResourceTest {
     void testGetSingleConcByAeidCcd() throws Exception {
         final List<CcdSingleConcData> singleconc = Collections.singletonList(ccdSingleConcData);
 
-        when(bioactivityScRepository.getSigleConcDataByAeid(3032)).thenReturn(singleconc);
+        when(bioactivityScRepository.getSingleConcDataByAeid(3032)).thenReturn(singleconc);
 
         mockMvc.perform(get("/bioactivity/assay/single-conc/search/by-aeid/{aeid}", 3032)
         		.param("projection", "ccd-single-conc"))
@@ -676,3 +676,4 @@ public class AssayResourceTest {
     
     }
 }
+
