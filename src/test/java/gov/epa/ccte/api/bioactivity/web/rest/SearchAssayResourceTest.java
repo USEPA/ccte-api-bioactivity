@@ -1,5 +1,7 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
+//This will test REST end-points in the SearchAssayResource.java using WebMvcTest and MockitoBean
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -148,4 +150,5 @@ public class SearchAssayResourceTest {
 
     }
     
+
 }
