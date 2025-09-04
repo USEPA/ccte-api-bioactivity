@@ -7,4 +7,8 @@ public interface ToxcastSummaryPlot {
     Float getAC50();
     Float getTopOverCutoff();
 
+    Void setAeid(String aeid);
+    Void setHitc(Float hitc);
+    Void setAC50(Float ac50);
+    Void setTopOverCutoff(Float topOverCutoff);
 }
