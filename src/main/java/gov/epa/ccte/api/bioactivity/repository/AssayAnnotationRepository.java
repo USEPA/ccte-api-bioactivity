@@ -16,6 +16,9 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation, Long> {
     <T> T findByAeid(Integer aeid, Class<T> type);
+
+    @Query("SELECT maa.aeid FROM AssayAnnotation maa WHERE assayComponentEndpointName = :assayComponentEndpointName")
+    Long findAeidByAssayComponentEndpointName(String assayComponentEndpointName);
     
     @Transactional(readOnly = true)
     <T> List<T> findByAeidInOrderByAeidAsc(String[] aeids, Class<T> type);
