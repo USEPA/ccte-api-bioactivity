@@ -83,6 +83,15 @@ public class AssayResource implements AssayApi {
     }
 
     @Override
+    public Long aeidByAssayEndpointName(String assayCompnentEndpointName){
+    	log.debug("Fetching aeid for assayComponentEndpointName = {}", assayCompnentEndpointName);
+    	
+    	Long data = annotationRepository.findAeidByAssayComponentEndpointName(assayCompnentEndpointName);
+    	
+    	return data;
+    }
+    
+    @Override
     public List<?> singleConcDataByAeid(Integer aeid, String projection) {
         return switch (projection) {
             case "single-conc" -> bioactivityScRepository.findByAeidAndChidRep(aeid, (short) 1);
@@ -127,3 +136,4 @@ public class AssayResource implements AssayApi {
         return annotationRepository.count();
     }
 }
+
