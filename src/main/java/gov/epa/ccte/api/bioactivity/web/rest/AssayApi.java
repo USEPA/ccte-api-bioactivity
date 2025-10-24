@@ -105,7 +105,7 @@ public interface AssayApi {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and aeid for the assay endpoint name
      */
-    @Operation(summary = "Get aeid by assay compoent endpoint name")
+    @Operation(summary = "Get aeid by assay component endpoint name")
     @RequestMapping(value = "/search/by-endpoint/{assayComponentEndpointName}", method = RequestMethod.GET)
     @ResponseBody
     Long aeidByAssayEndpointName(@Parameter(required = true, description = "Assay Component Endpoint Name", example = "CCTE_GLTED_hIYD") @PathVariable("assayComponentEndpointName") String assayComponentEndpointName);
