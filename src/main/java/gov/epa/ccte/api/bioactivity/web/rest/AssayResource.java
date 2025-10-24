@@ -83,12 +83,11 @@ public class AssayResource implements AssayApi {
     }
 
     @Override
-    public Long aeidByAssayEndpointName(String assayCompnentEndpointName){
-    	log.debug("Fetching aeid for assayComponentEndpointName = {}", assayCompnentEndpointName);
-    	
-    	Long data = annotationRepository.findAeidByAssayComponentEndpointName(assayCompnentEndpointName);
-    	
-    	return data;
+    @GetMapping("/search/by-endpoint/{assayEndpointName}")
+    public Long aeidByAssayEndpointName(@PathVariable("assayEndpointName") String assayEndpointName){
+        log.debug("Fetching aeid for assayEndpointName = {}", assayEndpointName);
+        Long data = annotationRepository.findAeidByAssayComponentEndpointName(assayEndpointName);
+        return data;
     }
     
     @Override
@@ -136,4 +135,3 @@ public class AssayResource implements AssayApi {
         return annotationRepository.count();
     }
 }
-
