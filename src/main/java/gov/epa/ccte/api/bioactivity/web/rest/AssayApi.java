@@ -100,7 +100,7 @@ public interface AssayApi {
                                                     @RequestBody String[] aeids);
 
 	/**
-     * {@code GET  bioactivity/assay/search/by-endpoint/{assayEndpointName}} : returns associated aeid for the assay endpoint name
+     * {@code GET  /bioactivity/assay/search/by-endpoint/{assayEndpointName}} : returns associated aeid for the assay endpoint name
      * *
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and aeid for the assay endpoint name
