@@ -83,7 +83,7 @@ public class AssayResource implements AssayApi {
     }
 
     @Override
-    public Long aeidByAssayEndpointName(@PathVariable("assayEndpointName") String assayComponentEndpointName){
+    public Long aeidByAssayEndpointName(String assayComponentEndpointName){
         log.debug("Fetching aeid for assayComponentEndpointName = {}", assayComponentEndpointName);
         Long data = annotationRepository.findAeidByAssayComponentEndpointName(assayComponentEndpointName);
         return data;
@@ -135,3 +135,4 @@ public class AssayResource implements AssayApi {
     }
 
 }
+
