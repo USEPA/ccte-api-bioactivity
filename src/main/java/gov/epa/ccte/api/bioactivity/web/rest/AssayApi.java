@@ -99,6 +99,17 @@ public interface AssayApi {
                     examples = {@ExampleObject("\"[\\\"111\\\",\\\"3032\\\"]\"")})})
                                                     @RequestBody String[] aeids);
 
+	/**
+     * {@code GET  /bioactivity/assay/search/by-endpoint/{assayEndpointName}} : returns associated aeid for the assay endpoint name
+     * *
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and aeid for the assay endpoint name
+     */
+    @Operation(summary = "Get aeid by assay component endpoint name")
+    @RequestMapping(value = "/search/by-endpoint/", method = RequestMethod.GET)
+    @ResponseBody
+    Long aeidByAssayEndpointName(@RequestParam(required = true, value = "endpoint") String assayComponentEndpointName);
+
     /**
      * {@code GET  /bioactivity/assay/single-conc/search/by-aeid/:aeid} : single conc data for the "aeid".
      *

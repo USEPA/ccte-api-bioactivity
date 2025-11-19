@@ -1,9 +1,8 @@
 package gov.epa.ccte.api.bioactivity.web.rest;
 
 import gov.epa.ccte.api.bioactivity.domain.AedData;
-import gov.epa.ccte.api.bioactivity.domain.AssayListCount;
+import gov.epa.ccte.api.bioactivity.domain.AssayAgg;
 import gov.epa.ccte.api.bioactivity.domain.ChemicalAgg;
-import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataBase;
 import gov.epa.ccte.api.bioactivity.projection.data.SummaryByTissue;
 import gov.epa.ccte.api.bioactivity.projection.data.BioactivityDataAll;
 import io.swagger.v3.oas.annotations.Operation;
@@ -151,7 +150,7 @@ public interface DataApi {
     })
     @RequestMapping(value = "/search/by-m4id/{m4id}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
-    BioactivityDataBase dataByM4Id(@Parameter(required = true, description = "Numeric data identifier", example = "1135145")
+    List<BioactivityDataAll> dataByM4Id(@Parameter(required = true, description = "Numeric data identifier", example = "1135145")
                                    @PathVariable("m4id") Integer m4id);
 
     /**
@@ -181,11 +180,11 @@ public interface DataApi {
     @Operation(summary = "Get summary by aeid", description = "Return summary data for given aeid", tags = {"bioactivity", "data"})
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
-                    schema=@Schema(oneOf = {AssayListCount.class}))),
+                    schema=@Schema(oneOf = {AssayAgg.class}))),
     })
     @RequestMapping(value = "/summary/search/by-aeid/{aeid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
-    AssayListCount summaryByAeid(@Parameter(required = true, description = "Numeric assay endpoint identifier", example = "3032")
+    List<AssayAgg> summaryByAeid(@Parameter(required = true, description = "Numeric assay endpoint identifier", example = "3032")
                                  @PathVariable("aeid") Integer aeid);
     
     /**
@@ -219,12 +218,12 @@ public interface DataApi {
             content = @Content(mediaType = "application/json",
                 array = @ArraySchema(schema = @Schema(implementation = AedData.class))))
     })
-    @PostMapping(value = "/aed/search/by-dtxsid", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/aed/search/by-dtxsid/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<AedData> getAedDataForBatchDtxsids(@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, description = "List of DTXSIDs",
             content = {@Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
             examples = {@ExampleObject("\"[\\\"DTXSID7020182\\\",\\\"DTXSID9020112\\\"]\"")})})
-                                               @RequestBody List<String> dtxsids);
+                                               @RequestBody String[] dtxsids);
     
 
     /**

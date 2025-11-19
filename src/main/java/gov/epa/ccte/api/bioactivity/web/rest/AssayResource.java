@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 public class AssayResource implements AssayApi {
     final private AssayAnnotationRepository annotationRepository;
-    final private AssayAnnotationAggRepository assayAnnotationAggRepository;
+    final private AssayAggRepository assayAggRepository;
     final private AOPRepository aopRepository;
     private final AssayService assayService;
     private final BioactivityDataRepository dataRepository;
@@ -28,13 +28,13 @@ public class AssayResource implements AssayApi {
     private Integer batchSize;
 
     public AssayResource(AssayAnnotationRepository annotationRepository,
-                         AssayAnnotationAggRepository assayAnnotationAggRepository,
+                         AssayAggRepository assayAggRepository,
                          AOPRepository aopRepository, AssayService assayService,
                          BioactivityDataRepository dataRepository,
                          BioactivityScRepository bioactivityScRepository) {
 
         this.annotationRepository = annotationRepository;
-        this.assayAnnotationAggRepository = assayAnnotationAggRepository;
+        this.assayAggRepository = assayAggRepository;
         this.aopRepository = aopRepository;
         this.assayService = assayService;
         this.dataRepository = dataRepository;
@@ -51,11 +51,11 @@ public class AssayResource implements AssayApi {
         }
 
         Object result = switch (projection) {
-            case "ccd-assay-annotation" -> assayAnnotationAggRepository.findAnnotationByAeid(aeid);
-            case "ccd-assay-gene" -> assayAnnotationAggRepository.findGeneByAeid(aeid);
-            case "ccd-assay-citations" -> assayAnnotationAggRepository.findCitationsByAeid(aeid);
-            case "ccd-tcpl-processing" -> assayAnnotationAggRepository.findTcplByAeid(aeid);
-            case "ccd-assay-reagents" -> assayAnnotationAggRepository.findReagentByAeid(aeid);
+            case "ccd-assay-annotation" -> assayAggRepository.findAnnotationByAeid(aeid);
+            case "ccd-assay-gene" -> assayAggRepository.findGeneByAeid(aeid);
+            case "ccd-assay-citations" -> assayAggRepository.findCitationsByAeid(aeid);
+            case "ccd-tcpl-processing" -> assayAggRepository.findTcplByAeid(aeid);
+            case "ccd-assay-reagents" -> assayAggRepository.findReagentByAeid(aeid);
             case "ccd-assay-aop" -> aopRepository.findByToxcastAeid(aeid);
             default -> annotationRepository.findByAeid(aeid, AssayAll.class);
         };
@@ -83,10 +83,17 @@ public class AssayResource implements AssayApi {
     }
 
     @Override
+    public Long aeidByAssayEndpointName(String assayComponentEndpointName){
+        log.debug("Fetching aeid for Assay Component Endpoint Name = {}", assayComponentEndpointName);
+        Long data = annotationRepository.findAeidByAssayComponentEndpointName(assayComponentEndpointName);
+        return data;
+    }
+    
+    @Override
     public List<?> singleConcDataByAeid(Integer aeid, String projection) {
         return switch (projection) {
             case "single-conc" -> bioactivityScRepository.findByAeidAndChidRep(aeid, (short) 1);
-            case "ccd-single-conc" -> bioactivityScRepository.getSigleConcDataByAeid(aeid);
+            case "ccd-single-conc" -> bioactivityScRepository.getSingleConcDataByAeid(aeid);
             default -> bioactivityScRepository.findByAeidAndChidRep(aeid, (short) 1);
         };
     }
@@ -126,4 +133,7 @@ public class AssayResource implements AssayApi {
 
         return annotationRepository.count();
     }
+
 }
+
+

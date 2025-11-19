@@ -24,7 +24,7 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
     <T>List<T> findByDtxsidInOrderByDtxsidAsc(String[] dtxsids, Class<T> type);
 
     @Transactional(readOnly = true)
-    <T> T findByM4id(Integer m4id, Class<T> type);
+    <T>List<T> findByM4id(Integer m4id, Class<T> type);
 
     @Transactional(readOnly = true)
     <T>List<T> findByM4idInOrderByM4idAsc(String[] spids, Class<T> type);
@@ -68,7 +68,7 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 			  AND b.mc7_param IS NOT NULL
 			ORDER BY b.dsstox_substance_id
 			""", nativeQuery = true)
-	List<AedRawDataProjection> findAedDataByDtxsidIn(@Param("dtxsids") List<String> dtxsids);
+	List<AedRawDataProjection> findAedDataByDtxsidIn(@Param("dtxsids") String[] dtxsids);
 
     @Query(value = """
         	SELECT
@@ -205,7 +205,5 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		        AND b.chid_rep = 1
 		    WHERE b.aeid = :aeid
 		""", nativeQuery = true)
-		List<CcdAssayDetails> getFullCcdAssayDetailsByAeid(
-		    @Param("aeid") Integer aeid
-		);
+		List<CcdAssayDetails> getFullCcdAssayDetailsByAeid(@Param("aeid") Integer aeid);
 }
