@@ -148,7 +148,7 @@ public interface AssayApi {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the array of asssay endpoints list.
      */
-    @Operation(summary = "Get assay summary by gene symbol", description = "Return assay summary data, including percentage of single and multiple-concentration screening actives, for appliable assays for requested offical gene symbol.")
+    @Operation(summary = "Get assay summary by gene symbol", description = "Return assay summary data, including percentage of single and multiple-concentration screening actives, for applicable assays for requested offical gene symbol.")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {AssayEndpointsList.class}))),

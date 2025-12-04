@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping(value = "/bioactivity/analyticalqc", produces = MediaType.APPLICATION_JSON_VALUE)
 public interface AnalyticalQCApi {
 
-    @Operation(summary = "Get analytical QC data by DTXSID", description = "return anlaytical QC data for requested DTXSID")
+    @Operation(summary = "Get analytical QC data by DTXSID", description = "return analytical QC data for requested DTXSID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {AnalyticalQC.class}))),
             @ApiResponse(responseCode = "404", description = "Data not found", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ProblemDetail.class})))
