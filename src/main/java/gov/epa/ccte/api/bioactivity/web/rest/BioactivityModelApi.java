@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * REST controller for getting the {@link gov.epa.ccte.api.bioactivity.domain.BioactivityModel}s.
  */
 @Tag(name = "Bioactivity Model Resource",
-        description = "API endpoints for collecting bioactivity models.")
+        description = "Collection of endpoints for prediction results from ToxCast bioactivity models. The publications associated with the ToxCast Pathway Models are: 1) ESTROGEN: As described in Browne, et al (2015) DOI: 10.1021/acs.est.5b02641 and presented to December 2014 FIFRA SAP under EPA-HQ-OPP-2014-0614. 2) ANDROGEN: As described in Kleinstreuer et al (2017) 10.1021/acs.chemrestox.6b00347 and presented to November 2017 FIFRA SAP under EPA-HQ-OPP-2017-0214.")
 @SecurityRequirement(name = "api_key")
 @RequestMapping("bioactivity/models")
 public interface BioactivityModelApi {
@@ -34,7 +34,7 @@ public interface BioactivityModelApi {
      * @param dtxsid the matching dtxsid of the Models to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the toxcast models.
      */
-    @Operation(summary = "Get toxcast model by dtxsid", description = "Return toxcast model for given dtxsid", tags = {"bioactivity", "model"})
+    @Operation(summary = "Get predictions by DTXSID", description = "return ToxCast model predictions for a given DTXSID", tags = {"bioactivity", "model"})
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -50,7 +50,9 @@ public interface BioactivityModelApi {
      * @param dtxsid the matching dtxsid and model of the Models to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the toxcast models.
      */
-    @Operation(summary = "Get toxcast model by dtxsid and model", description = "Return toxcast model for given dtxsid and model", tags = {"bioactivity", "model"})
+    @Operation(summary = "Get predictions by DTXSID and model", 
+                description = "return ToxCast model predictions for given a DTXSID and model type. Model type options include: 'CERAPP Potency Level (Consensus)', 'CERAPP Potency Level (From Literature)', 'COMPARA (Consensus)', and 'ToxCast Pathway Model (AUC)'", 
+                tags = {"bioactivity", "model"})
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",

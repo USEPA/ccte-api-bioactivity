@@ -23,8 +23,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 /**
  * REST controller for getting the {@link gov.epa.ccte.api.bioactivity.domain.BioactivityData}s.
  */
-@Tag(name = "Bioactivity AOP Data Resource",
-        description = "API endpoints for collecting bioactivity AOP data.")
+@Tag(name = "CCD AOP Data Resource",
+        description = "Collection of endpoints used to populate CompTox Chemicals Dashboard (CCD) Adverse Outcome Pathway (AOP) and Key Event (KE) links within the ToxCast Summary Grid. Curated mappings of AOPs and KEs for individual ToxCast assay endpoints are made available in ToxCast's invitrodb.")
 @SecurityRequirement(name = "api_key")
 @RequestMapping("bioactivity/aop")
 public interface AOPApi {
@@ -34,7 +34,7 @@ public interface AOPApi {
      * @param toxcastAeid the matching toxcastAeid of the AOPs to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get aop data by toxcast aeid", description = "Return aop data for given toxcast aeid", tags = {"bioactivity", "aop"})
+    @Operation(summary = "Get AOP data by ToxCast AEID", description = "Return ToxCast-mapped AOP data for a given ToxCast assay component endpoint ID (AEID)", tags = {"bioactivity", "aop"})
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -42,7 +42,7 @@ public interface AOPApi {
     })
     @RequestMapping(value = "/search/by-toxcast-aeid/{toxcastAeid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
-    List<AOP> dataByToxcastAeid(@Parameter(required = true, description = "Toxcast Aeid", example = "63")@PathVariable("toxcastAeid") Integer toxcastAeid);
+    List<AOP> dataByToxcastAeid(@Parameter(required = true, description = "ToxCast AEID", example = "63")@PathVariable("toxcastAeid") Integer toxcastAeid);
     
     /**
      * {@code GET  /bioactivity/aop/search/by-entrez-gene-id/{entrezGeneId} : get bioactivity aop data for the "entrezGeneId".
@@ -50,7 +50,7 @@ public interface AOPApi {
      * @param entrezGeneId the matching entrezGeneId of the AOPs to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get aop data by entrez gene id", description = "Return aop data for given entrez gene id", tags = {"bioactivity", "aop"})
+    @Operation(summary = "Get AOP data by Entrez Gene ID", description = "Return ToxCast-mapped AOP data for a given Entrez Gene ID", tags = {"bioactivity", "aop"})
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -66,7 +66,7 @@ public interface AOPApi {
      * @param eventNumber the matching eventNumber of the AOPs to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get aop data by event number", description = "Return aop data for given event number", tags = {"bioactivity", "aop"})
+    @Operation(summary = "Get AOP data by Key Event", description = "Return ToxCast-mapped AOP data for a given Key Event (KE) number", tags = {"bioactivity", "aop"})
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -74,5 +74,5 @@ public interface AOPApi {
     })
     @RequestMapping(value = "/search/by-event-number/{eventNumber}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
-    List<AOP> dataByEventNumber(@Parameter(required = true,  description = "Event Number", example = "18")@PathVariable("eventNumber") Integer eventNumber);
+    List<AOP> dataByEventNumber(@Parameter(required = true,  description = "Key Event Number", example = "18")@PathVariable("eventNumber") Integer eventNumber);
 }

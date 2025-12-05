@@ -19,14 +19,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Assay Search Resource", description = "API endpoints for searching assays (starts-with, exact, contains.")
+@Tag(name = "Assay Name Search Resource", description = "Collection of endpoints for searching by assay name. Search string options include starts-with, exact, or contains.")
 @SecurityRequirement(name = "api_key")
 public interface SearchAssayApi {
 
     @Operation(summary = "Search by starting value", description = "NOTE: Search value needs to be URL encoded for synonyms")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {SearchAssay.class}))),
-            @ApiResponse(responseCode = "400", description = "Data not found.",
+            @ApiResponse(responseCode = "400", description = "No data found",
                     content = @Content(mediaType = "application/problem+json", schema = @Schema(oneOf = {ProblemDetail.class})))
     })
     @GetMapping(value = "bioactivity/search/start-with/{value}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +39,7 @@ public interface SearchAssayApi {
     @Operation(summary = "Search by exact value", description = "NOTE: Search value needs to be URL encoded for synonyms")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {SearchAssay.class}))),
-            @ApiResponse(responseCode = "400", description = "Data not found.",
+            @ApiResponse(responseCode = "400", description = "No data found",
                     content = @Content(mediaType = "application/problem+json", schema = @Schema(oneOf = {ProblemDetail.class})))
     })
     @GetMapping(value = "bioactivity/search/equal/{value}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,7 +51,7 @@ public interface SearchAssayApi {
     @Operation(summary = "Search by substring value", description = "NOTE: Search value needs to be URL encoded for synonyms")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {SearchAssay.class}))),
-            @ApiResponse(responseCode = "400", description = "Data not found.",
+            @ApiResponse(responseCode = "400", description = "No data found",
                     content = @Content(mediaType = "application/problem+json", schema = @Schema(oneOf = {ProblemDetail.class})))
     })
     @GetMapping(value = "bioactivity/search/contain/{value}", produces = MediaType.APPLICATION_JSON_VALUE)
