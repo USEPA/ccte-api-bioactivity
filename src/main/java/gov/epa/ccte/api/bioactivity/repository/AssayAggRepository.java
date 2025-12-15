@@ -1,6 +1,6 @@
 package gov.epa.ccte.api.bioactivity.repository;
 
-import gov.epa.ccte.api.bioactivity.domain.AssayAnnotationAgg;
+import gov.epa.ccte.api.bioactivity.domain.AssayAgg;
 import gov.epa.ccte.api.bioactivity.projection.assay.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,8 +12,10 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 @RepositoryRestResource(exported = false)
-public interface AssayAnnotationAggRepository extends JpaRepository<AssayAnnotationAgg, Long> {
+public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 
+	<T>List<T> findByAeid(Integer aeid);
+	
 @Query(value = """   
    			SELECT aeid,
              assay_component_endpoint_name as AssayComponentEndpointName,

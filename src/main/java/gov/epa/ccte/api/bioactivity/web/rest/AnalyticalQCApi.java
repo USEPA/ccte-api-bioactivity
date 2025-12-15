@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Analytical QC Resource", description = "API endpoints for Analytical QC data.")
+@Tag(name = "Analytical QC Resource", description = "Endpoint for Analytical QC data to inform the chemical's applicability domain for in vitro screening at the sample and substance level. These curated data sourced from US EPA's Toxicity Forecaster (ToxCast) invitrodb.")
 @RequestMapping(value = "/bioactivity/analyticalqc", produces = MediaType.APPLICATION_JSON_VALUE)
 public interface AnalyticalQCApi {
 
-    @Operation(summary = "Get analytical QC data by DTXSID")
+    @Operation(summary = "Get analytical QC data by DTXSID", description = "return analytical QC data for requested DTXSID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {AnalyticalQC.class}))),
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {AnalyticalQC.class}))),
             @ApiResponse(responseCode = "404", description = "Data not found", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ProblemDetail.class})))
     })
     @GetMapping("/search/by-dtxsid/{dtxsid}")
