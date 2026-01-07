@@ -36,7 +36,7 @@ public interface DataApi {
      * @param dtxsid the matching dtxsid of the assays to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get data by DTXSID", description = "Return data for a given DTXSID. There is an available projection aligned with what's available on the CCD ToxCast Summary plot: toxcast-summary-plot. If no projection is specified, a default BioactivityDataAll projection will be returned.", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get data by DTXSID", description = "Return data for a given DTXSID. There is an available projection aligned with what's available on the CCD ToxCast Summary plot: toxcast-summary-plot. If no projection is specified, a default BioactivityDataAll projection will be returned.")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -73,7 +73,7 @@ public interface DataApi {
      * @param aeid the matching aeid of the assays to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get data by AEID", description = "Return data by ToxCast assay component endpoint ID (AEID)", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get data by AEID", description = "Return data by ToxCast assay component endpoint ID (AEID)")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -108,7 +108,7 @@ public interface DataApi {
      * @param spid the matching spid of the assays to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get data by SPID", description = "return data for given sample ID (SPID)", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get data by SPID", description = "return data for given sample ID (SPID)")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -143,7 +143,7 @@ public interface DataApi {
      * @param m4id the matching m4id of the assays to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get data by M4ID", description = "return data for given Level 4 ID (M4ID), corresponding to the individual modeled endpoint-sample concentration-response", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get data by M4ID", description = "return data for given Level 4 ID (M4ID), corresponding to the individual modeled endpoint-sample concentration-response")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {BioactivityDataAll.class}))),
@@ -177,7 +177,7 @@ public interface DataApi {
      * @param aeid the matching aeid of the assays to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the Summary data.
      */
-    @Operation(summary = "Get summary data by AEID", description = "return summary of active hits and total multi- and single-concentration chemicals tested for given ToxCast assay component endpoint ID (AEID)", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get summary data by AEID", description = "return summary of active hits and total multi- and single-concentration chemicals tested for given ToxCast assay component endpoint ID (AEID)")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {AssayAgg.class}))),
@@ -193,7 +193,7 @@ public interface DataApi {
      * @param dtxsid the matching aeid of the assays to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the Summary data.
      */
-    @Operation(summary = "Get summary data by DTXSID", description = "return summary of active hits and total multi- and single-concentration assays tested for given DTXSID", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get summary data by DTXSID", description = "return summary of active hits and total multi- and single-concentration assays tested for given DTXSID")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {ChemicalAgg.class}))),
@@ -205,14 +205,14 @@ public interface DataApi {
     
 
     @GetMapping(value = "/aed/search/by-dtxsid/{dtxsid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Get AED data by DTXSID", description = "return administered equivalent dose (AED) data derived from ToxCast in vitro bioactivity data for given DTXSID", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get AED data by DTXSID", description = "return administered equivalent dose (AED) data derived from ToxCast in vitro bioactivity data for given DTXSID")
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = AedData.class)))
     @ResponseBody
     List<AedData> getAedDataByDtxsid(@Parameter(required = true, example = "DTXSID5021209") @PathVariable String dtxsid);
     
     
-    @Operation(summary = "Get AED data for a batch of DTXSIDs", description = "return administered equivalent dose (AED) data derived from ToxCast in vitro bioactivity data for given DTXSIDs", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get AED data for a batch of DTXSIDs", description = "return administered equivalent dose (AED) data derived from ToxCast in vitro bioactivity data for given DTXSIDs")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json",
@@ -232,7 +232,7 @@ public interface DataApi {
      * @param dtxsid the matching aeid of the assays to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the Summary data.
      */
-    @Operation(summary = "Get summary data by DTXSID and assay tissue origin", description = "return summary data for given DTXSID and the assay format's tissue origin", tags = {"bioactivity", "data"})
+    @Operation(summary = "Get summary data by DTXSID and assay tissue origin", description = "return summary data for given DTXSID and the assay format's tissue origin")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {SummaryByTissue.class}))),

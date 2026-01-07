@@ -12,7 +12,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import gov.epa.ccte.api.bioactivity.projection.assay.*;
+import gov.epa.ccte.api.bioactivity.domain.AnalyticalQC;
 
 import javax.sql.DataSource;
 
@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.*;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AssayAnnotationRepositoryTest {
+public class AnalyticalQCRepositoryTest {
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> pgsqldb = new PostgreSQLContainer<>("postgres:16-alpine");
@@ -31,7 +31,7 @@ public class AssayAnnotationRepositoryTest {
     private DataSource dataSource;
     @Autowired private JdbcTemplate jdbcTemplate;
     @Autowired private TestEntityManager entityManager;
-    @Autowired private AssayAnnotationRepository repository;
+    @Autowired private AnalyticalQCRepository repository;
 
     @Test
     void connectionEstablished(){
@@ -50,44 +50,13 @@ public class AssayAnnotationRepositoryTest {
     // Now test data loaded or not
     @Test
     void testDataLoaded() {
-        assertThat(repository.findAll().size()).isEqualTo(3);
+        assertThat(repository.findAll().size()).isEqualTo(10);
     }
     
-
     @Test
-    void testAssayAnnotationByAeid(){
-        assertThat(repository.findByAeid(111, AssayAll.class)).isNotNull();
+    void testAnalyticalQCByDtxsid() { 
+    	assertThat(repository.findByDtxsid("DTXSID7020182", AnalyticalQC.class)).size().isEqualTo(5);
         
-        assertThat(repository.findByAeid(3032, AssayAll.class)).isNotNull();
-    }
-
-    @Test
-    void testAeidByEndpoint(){
-        assertThat(repository.findAeidByAssayComponentEndpointName("ATG_TCF_b_cat_CIS")).isEqualTo(111L);
-        
-        assertThat(repository.findAeidByAssayComponentEndpointName("CCTE_GLTED_hIYD")).isEqualTo(3032L);
-    }
-    
-    @Test
-    void testAssayAnnotationByBatchAeid() {
-    	String[] aeids = {"111","3032"};
-    	assertThat(repository.findByAeidInOrderByAeidAsc(aeids, AssayAll.class)).size().isEqualTo(2);
-        
-    }
-    
-    @Test
-    void testGetAllAssayAnnotations(){
-        assertThat(repository.findBy(AssayAll.class)).size().isEqualTo(3);
-    }
-    
-    @Test
-    void testGetAllAssayAnnotationsCCD(){
-        assertThat(repository.findAssayAnnotations(CcdAssayList.class)).size().isEqualTo(6);
-        
-    }
-    
-    @Test
-    void testAssayEndpointsListByGene(){
-        assertThat(repository.findAssayEndpointsListByGene("TCF7")).size().isEqualTo(1);
+    	assertThat(repository.findByDtxsid("DTXSID9020112", AnalyticalQC.class)).size().isEqualTo(5);
     }
 }

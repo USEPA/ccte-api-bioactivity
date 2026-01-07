@@ -16,6 +16,9 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 
 	<T>List<T> findByAeid(Integer aeid);
 	
+    // *********************** AssayAgg - End *************************************
+    // *********************** CCD Assay Annotation Projections - Start *************************************
+	
 @Query(value = """   
    			SELECT aeid,
              assay_component_endpoint_name as AssayComponentEndpointName,

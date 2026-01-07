@@ -34,7 +34,7 @@ public interface BioactivityModelApi {
      * @param dtxsid the matching dtxsid of the Models to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the toxcast models.
      */
-    @Operation(summary = "Get predictions by DTXSID", description = "return ToxCast model predictions for a given DTXSID", tags = {"bioactivity", "model"})
+    @Operation(summary = "Get predictions by DTXSID", description = "return ToxCast model predictions for a given DTXSID")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -51,8 +51,7 @@ public interface BioactivityModelApi {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the toxcast models.
      */
     @Operation(summary = "Get predictions by DTXSID and model", 
-                description = "return ToxCast model predictions for given a DTXSID and model type. Model type options include: 'CERAPP Potency Level (Consensus)', 'CERAPP Potency Level (From Literature)', 'COMPARA (Consensus)', and 'ToxCast Pathway Model (AUC)'", 
-                tags = {"bioactivity", "model"})
+                description = "return ToxCast model predictions for given a DTXSID and model type. Model type options include: 'CERAPP Potency Level (Consensus)', 'CERAPP Potency Level (From Literature)', 'COMPARA (Consensus)', and 'ToxCast Pathway Model (AUC)'")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
