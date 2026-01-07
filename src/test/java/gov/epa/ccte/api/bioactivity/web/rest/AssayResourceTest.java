@@ -675,5 +675,19 @@ public class AssayResourceTest {
                 .andExpect(status().isOk());
     
     }
+    
+    @Test
+    void testAeidByAssayEndpointName() throws Exception {
+        String endpointName = "CCTE_GLTED_hIYD";
+        Long expectedAeid = 3032L;
+
+        when(assayAnnotationRepository.findAeidByAssayComponentEndpointName(endpointName)).thenReturn(expectedAeid);
+
+        mockMvc.perform(get("/bioactivity/assay/search/by-endpoint/")
+        		.param("endpoint", endpointName))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedAeid.toString()));
+    }
 }
 
