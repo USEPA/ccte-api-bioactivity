@@ -1,6 +1,6 @@
 spring:
   application:
-    name: hazard
+    name: bioactivity
   jackson:
     serialization:
       indent-output: true
@@ -21,7 +21,7 @@ spring:
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
-      hibernate.default_schema: bio4_1
+      hibernate.default_schema: invitro
       hibernate.ddl-auto: validate
 
 # logging
@@ -32,15 +32,6 @@ logging:
     org.hibernate.type.descriptor.sql: trace
     gov.epa.ccte.api.*: debug
     org.springframework: warn
-
-#      #
-#      jakarta:
-#        persistence:
-#          schema-generation:
-#            scripts:
-#              action: create
-#              create-target: create.sql
-#              create-source: metadata
 
 
 

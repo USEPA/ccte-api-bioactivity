@@ -150,6 +150,7 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
 		        cd.active_assays AS activeAssays,
 		        cd.cpdata_count AS cpdataCount,
 		        cd.pubchem_count AS pubchemCount,
+		        cd.percent_assays AS percentAssays,
 		        cd.pubmed_count AS pubmedCount,
 		        cd.sources_count AS sourcesCount,
 		        cd.stereo AS stereo,

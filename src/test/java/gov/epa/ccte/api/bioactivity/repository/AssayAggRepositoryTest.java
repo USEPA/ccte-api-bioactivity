@@ -12,8 +12,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import gov.epa.ccte.api.bioactivity.projection.assay.*;
-
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.*;
@@ -22,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AssayAnnotationRepositoryTest {
+public class AssayAggRepositoryTest {
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> pgsqldb = new PostgreSQLContainer<>("postgres:16-alpine");
@@ -31,7 +29,7 @@ public class AssayAnnotationRepositoryTest {
     private DataSource dataSource;
     @Autowired private JdbcTemplate jdbcTemplate;
     @Autowired private TestEntityManager entityManager;
-    @Autowired private AssayAnnotationRepository repository;
+    @Autowired private AssayAggRepository repository;
 
     @Test
     void connectionEstablished(){
@@ -50,44 +48,52 @@ public class AssayAnnotationRepositoryTest {
     // Now test data loaded or not
     @Test
     void testDataLoaded() {
-        assertThat(repository.findAll().size()).isEqualTo(3);
+        assertThat(repository.findAll().size()).isEqualTo(2);
     }
     
-
     @Test
-    void testAssayAnnotationByAeid(){
-        assertThat(repository.findByAeid(111, AssayAll.class)).isNotNull();
+    void testAssayAggByAeid() { 
+    	assertThat(repository.findByAeid(111)).isNotNull();
         
-        assertThat(repository.findByAeid(3032, AssayAll.class)).isNotNull();
+    	assertThat(repository.findByAeid(3032)).isNotNull();
     }
-
+    
+    // *********************** AssayAgg - End *************************************
+    // *********************** CCD Assay Annotation Projections - Start *************************************
+    
     @Test
-    void testAeidByEndpoint(){
-        assertThat(repository.findAeidByAssayComponentEndpointName("ATG_TCF_b_cat_CIS")).isEqualTo(111L);
+    void testCCDAssayAnnotationByAeid() { 
+    	assertThat(repository.findByAeid(111)).isNotNull();
         
-        assertThat(repository.findAeidByAssayComponentEndpointName("CCTE_GLTED_hIYD")).isEqualTo(3032L);
+    	assertThat(repository.findByAeid(3032)).isNotNull();
     }
     
     @Test
-    void testAssayAnnotationByBatchAeid() {
-    	String[] aeids = {"111","3032"};
-    	assertThat(repository.findByAeidInOrderByAeidAsc(aeids, AssayAll.class)).size().isEqualTo(2);
+    void testCCDCitationByAeid() { 
+    	assertThat(repository.findCitationsByAeid(111)).isNotNull();
         
+    	assertThat(repository.findCitationsByAeid(3032)).isNotNull();
     }
     
     @Test
-    void testGetAllAssayAnnotations(){
-        assertThat(repository.findBy(AssayAll.class)).size().isEqualTo(3);
-    }
-    
-    @Test
-    void testGetAllAssayAnnotationsCCD(){
-        assertThat(repository.findAssayAnnotations(CcdAssayList.class)).size().isEqualTo(6);
+    void testCCDGeneByAeid() { 
+    	assertThat(repository.findGeneByAeid(111)).isNotNull();
         
+    	assertThat(repository.findGeneByAeid(3032)).isNotNull();
     }
     
     @Test
-    void testAssayEndpointsListByGene(){
-        assertThat(repository.findAssayEndpointsListByGene("TCF7")).size().isEqualTo(1);
+    void testCCDTcplByAeid() { 
+    	assertThat(repository.findTcplByAeid(111)).isNotNull();
+        
+    	assertThat(repository.findTcplByAeid(3032)).isNotNull();
     }
+    
+    @Test
+    void testCCDReagentByAeid() { 
+    	assertThat(repository.findReagentByAeid(111)).isNotNull();
+        
+    	assertThat(repository.findReagentByAeid(3032)).isNotNull();
+    }
+    
 }

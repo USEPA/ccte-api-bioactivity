@@ -34,7 +34,7 @@ public interface AOPApi {
      * @param toxcastAeid the matching toxcastAeid of the AOPs to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get AOP data by ToxCast AEID", description = "Return ToxCast-mapped AOP data for a given ToxCast assay component endpoint ID (AEID)", tags = {"bioactivity", "aop"})
+    @Operation(summary = "Get AOP data by ToxCast AEID", description = "Return ToxCast-mapped AOP data for a given ToxCast assay component endpoint ID (AEID)")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -50,7 +50,7 @@ public interface AOPApi {
      * @param entrezGeneId the matching entrezGeneId of the AOPs to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get AOP data by Entrez Gene ID", description = "Return ToxCast-mapped AOP data for a given Entrez Gene ID", tags = {"bioactivity", "aop"})
+    @Operation(summary = "Get AOP data by Entrez Gene ID", description = "Return ToxCast-mapped AOP data for a given Entrez Gene ID")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
@@ -66,7 +66,7 @@ public interface AOPApi {
      * @param eventNumber the matching eventNumber of the AOPs to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bioactivity data.
      */
-    @Operation(summary = "Get AOP data by Key Event", description = "Return ToxCast-mapped AOP data for a given Key Event (KE) number", tags = {"bioactivity", "aop"})
+    @Operation(summary = "Get AOP data by Key Event", description = "Return ToxCast-mapped AOP data for a given Key Event (KE) number")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content( mediaType = "application/json",
