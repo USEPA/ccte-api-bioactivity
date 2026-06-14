@@ -15,31 +15,32 @@ import java.util.Map;
 @RestControllerAdvice
 public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(HigherNumberOfRequestsException.class)
-    ProblemDetail handleHigherNumberOfRequestsException(HigherNumberOfRequestsException ex){
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
+	@ExceptionHandler(HigherNumberOfRequestsException.class)
+	ProblemDetail handleHigherNumberOfRequestsException(HigherNumberOfRequestsException ex) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+	}
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex, @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
+			@NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setTitle("Constraint Violations");
-        problemDetail.setProperty("violations", extractValidationErrors(ex));
+		ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+		problemDetail.setTitle("Constraint Violations");
+		problemDetail.setProperty("violations", extractValidationErrors(ex));
 
-        return ResponseEntity.badRequest().body(problemDetail);
-    }
+		return ResponseEntity.badRequest().body(problemDetail);
+	}
 
-    private Map<String, String> extractValidationErrors(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+	private Map<String, String> extractValidationErrors(MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new HashMap<>();
 
-        ex.getBindingResult().getAllErrors().forEach((error) ->{
-            if(error instanceof FieldError){
-                String fieldName = ((FieldError) error).getField();
-                String message = error.getDefaultMessage();
-                errors.put(fieldName, message);
-            }
-        });
-        return errors;
-    }
+		ex.getBindingResult().getAllErrors().forEach((error) -> {
+			if (error instanceof FieldError) {
+				String fieldName = ((FieldError) error).getField();
+				String message = error.getDefaultMessage();
+				errors.put(fieldName, message);
+			}
+		});
+		return errors;
+	}
 }
