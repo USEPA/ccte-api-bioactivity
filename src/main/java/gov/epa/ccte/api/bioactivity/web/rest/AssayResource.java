@@ -24,7 +24,7 @@ public class AssayResource implements AssayApi {
     private final BioactivityScRepository bioactivityScRepository;
 
 
-    @Value("200")
+    @Value("${bioactivity.batch.size:200}")
     private Integer batchSize;
 
     public AssayResource(AssayAnnotationRepository annotationRepository,
