@@ -85,10 +85,6 @@ sentry:
   traces-sample-rate: 1.0  # Captures 100% of transactions for performance monitoring
   environment: "${spring.profiles.active:default}"
 
-bioactivity:
-  batch:
-    size: 200
-
     
 # CORS is disabled by default on microservices, as you should access them through a gateway.
 # If you want to enable it, please uncomment the configuration below.
