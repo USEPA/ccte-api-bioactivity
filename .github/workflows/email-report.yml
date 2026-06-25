@@ -17,10 +17,10 @@ jobs:
                 report_path: ${{ env.REPORT_DIR }}/bioactivity-report.html
                 recipients: ${{ vars.REPORT_RECIPIENTS }}
                 sender: ${{ vars.REPORT_SENDER }}
-                subject: "CTX Bioactivity API Scan Report"
+                subject: "CTX-bioactivity-API container scanning results"
                 body: |
                     Hello,
 
-                    Please find attached the CTX Bioactivity API scan report.
+                    Please find attached the CTX-bioactivity-API container scan report.
 
                     Best regards.
