@@ -28,7 +28,7 @@ public class DataResource implements DataApi {
     private final AssayAggRepository assayAggRepository;
     private final ChemicalAggRepository chemAggRepository;
     
-    @Value("${bioactivity.batch.size:200}")
+    @Value("${bioactivity.batch-size:200}")
     private Integer batchSize;
     
     public DataResource(BioactivityDataRepository dataRepository, AssayAggRepository assayAggRepository, ChemicalAggRepository chemAggRepository) {
