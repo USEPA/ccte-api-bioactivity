@@ -6,12 +6,12 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:h2:mem:db-${random.uuid};MODE=PostgreSQL;NON_KEYWORDS=YEAR,VALUE
     hikari:
       auto-commit: false
   sql:
     init:
-      mode: always
+      mode: ALWAYS
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
@@ -22,7 +22,8 @@ spring:
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
       hibernate.default_schema: invitro
-      hibernate.ddl-auto: validate
+    defer-datasource-initialization: false
+    hibernate.ddl-auto: none
 
 # logging
 logging:
