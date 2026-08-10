@@ -27,7 +27,7 @@ public class AssayService {
         return this.wrapCcdAssayList(repo.findAssayAnnotations(CcdAssayList.class));
     }
 
-    // helper to wrap the assay list for CCD; not sure why a local class DTO wasn't created instead of using a listmap
+    // Wrap CcdAssayList projections into the CCD assay-list response shape expected by clients.
     private List<Map<String, Object>> wrapCcdAssayList(List<CcdAssayList> assayList) {
         Map<Long, Map<String, Object>> assayMap = new LinkedHashMap<>();
 
