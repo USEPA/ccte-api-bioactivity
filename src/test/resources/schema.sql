@@ -1,3 +1,5 @@
+SET MODE PostgreSQL;
+
 CREATE SCHEMA aop;
 
 CREATE TABLE aop.mv_toxcast_aop_map (
@@ -7,7 +9,7 @@ CREATE TABLE aop.mv_toxcast_aop_map (
 	event_link varchar NULL,
 	aop_number int4 NULL,
 	aop_link varchar NULL,
-	id serial4 NOT NULL
+	id int4 GENERATED ALWAYS AS IDENTITY NOT NULL
 );
 
 CREATE SCHEMA invitro;
@@ -211,7 +213,7 @@ CREATE TABLE invitro.mv_chemical_analytical_qc (
 );
 
 CREATE TABLE invitro.search_assay (
-	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
+	id int4 GENERATED ALWAYS AS IDENTITY NOT NULL,
 	aeid int8 NULL,
 	search_name varchar(50) NULL,
 	search_value varchar(200) NULL,
