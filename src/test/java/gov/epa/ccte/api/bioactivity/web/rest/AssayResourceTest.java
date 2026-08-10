@@ -593,16 +593,19 @@ public class AssayResourceTest {
         		map.put("geneArray", ccdAssayList.setGene(ccdAssayGene));
         		map.put("singleConc", ccdAssayList.setSingleConc(singleConc));
         		map.put("multiConc", ccdAssayList.setMulticonc(multiConc));
+                        map.put("geneSymbol", ccdAssayList.getGeneSymbol());
+                        map.put("officialSymbol", ccdAssayList.getOfficialSymbol());
         		return map;});
         final List<Map<String,Object>> result = new ArrayList<>(assayMap.values());
 
-        when(assayService.wrapCcdAssayList(assayAnnotationRepository.findAssayAnnotations(CcdAssayList.class))).thenReturn(result);
+        when(assayService.fetchCcdAssayList()).thenReturn(result);
 
         mockMvc.perform(get("/bioactivity/assay/")
         		.param("projection", "ccd-assay-list"))
 				.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].aeid").value(ccdAssayList.getAeid()));
+                .andExpect(jsonPath("$[0].aeid").value(ccdAssayList.getAeid()))
+                .andExpect(jsonPath("$[0].officialSymbol").value(ccdAssayList.getOfficialSymbol()));
     
     }
     

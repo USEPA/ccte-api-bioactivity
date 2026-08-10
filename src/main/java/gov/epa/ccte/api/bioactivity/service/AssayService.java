@@ -11,66 +11,76 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.epa.ccte.api.bioactivity.projection.assay.CcdAssayList;
+import gov.epa.ccte.api.bioactivity.repository.AssayAnnotationRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AssayService {
-	
-	private static final ObjectMapper mapper = new ObjectMapper();
-	
-	public List<Map<String, Object>> wrapCcdAssayList(List<CcdAssayList> assayList) {
-	    Map<Long, Map<String, Object>> assayMap = new LinkedHashMap<>();
 
-	    for (CcdAssayList assay : assayList) {
-	        Long aeid = assay.getAeid();
-	        Map<String, Object> formattedAssay = assayMap.computeIfAbsent(aeid, id -> {
-	            Map<String, Object> map = new LinkedHashMap<>();
-	            map.put("vendorKey", assay.getVendorKey());
-	            map.put("vendorName", assay.getVendorName());
-	            map.put("assayName", assay.getAssayName());
-	            map.put("aeid", aeid);
-	            map.put("assayComponentName", assay.getAssayComponentName());
-	            map.put("assayComponentEndpointName", assay.getAssayComponentEndpointName());
-	            map.put("assayComponentEndpointDesc", assay.getAssayComponentEndpointDesc());
-	            map.put("ccdAssayDetail", assay.getCcdAssayDetail());
-	            map.put("commonName", assay.getCommonName());
-	            map.put("taxonName", assay.getTaxonName());
-	            
-	            String rawJson = assay.getAssayList();
-	            List<Map<String, Object>> parsed = new ArrayList<>();
-	            try {
-	                if (rawJson != null && !rawJson.isBlank()) {
+    private static final ObjectMapper mapper = new ObjectMapper();
+    private final AssayAnnotationRepository repo;
+
+    public List<Map<String, Object>> fetchCcdAssayList() {
+        return this.wrapCcdAssayList(repo.findAssayAnnotations(CcdAssayList.class));
+    }
+
+    // helper to wrap the assay list for CCD; not sure why a local class DTO wasn't created instead of using a listmap
+    private List<Map<String, Object>> wrapCcdAssayList(List<CcdAssayList> assayList) {
+        Map<Long, Map<String, Object>> assayMap = new LinkedHashMap<>();
+
+        for (CcdAssayList assay : assayList) {
+            Long aeid = assay.getAeid();
+            Map<String, Object> formattedAssay = assayMap.computeIfAbsent(aeid, id -> {
+                Map<String, Object> map = new LinkedHashMap<>();
+                map.put("vendorKey", assay.getVendorKey());
+                map.put("vendorName", assay.getVendorName());
+                map.put("assayName", assay.getAssayName());
+                map.put("aeid", aeid);
+                map.put("assayComponentName", assay.getAssayComponentName());
+                map.put("assayComponentEndpointName", assay.getAssayComponentEndpointName());
+                map.put("assayComponentEndpointDesc", assay.getAssayComponentEndpointDesc());
+                map.put("ccdAssayDetail", assay.getCcdAssayDetail());
+                map.put("commonName", assay.getCommonName());
+                map.put("taxonName", assay.getTaxonName());
+
+                String rawJson = assay.getAssayList();
+                List<Map<String, Object>> parsed = new ArrayList<>();
+                try {
+                    if (rawJson != null && !rawJson.isBlank()) {
 	                    parsed = mapper.readValue(rawJson, new TypeReference<List<Map<String, Object>>>() {});
-	                }
-	            } catch (Exception e) {
-	            }
-	            map.put("assayList", parsed);
-	            
-	            map.put("geneArray", new ArrayList<Map<String, Object>>());
+                    }
+                } catch (Exception e) {
+                }
+                map.put("assayList", parsed);
 
-	            Map<String, Object> singleConc = new LinkedHashMap<>();
-	            singleConc.put("singleConcChemicalCountActive", assay.getSingleConcChemicalCountActive());
-	            singleConc.put("singleConcChemicalCountTotal", assay.getSingleConcChemicalCountTotal());
-	            map.put("singleConc", List.of(singleConc));
+                map.put("geneArray", new ArrayList<Map<String, Object>>());
 
-	            Map<String, Object> multiConc = new LinkedHashMap<>();
-	            multiConc.put("multiConcChemicalCountActive", assay.getMultiConcChemicalCountActive());
-	            multiConc.put("multiConcChemicalCountTotal", assay.getMultiConcChemicalCountTotal());
-	            map.put("multiConc", List.of(multiConc));
+                Map<String, Object> singleConc = new LinkedHashMap<>();
+                singleConc.put("singleConcChemicalCountActive", assay.getSingleConcChemicalCountActive());
+                singleConc.put("singleConcChemicalCountTotal", assay.getSingleConcChemicalCountTotal());
+                map.put("singleConc", List.of(singleConc));
 
-	            return map;
-	        });
+                Map<String, Object> multiConc = new LinkedHashMap<>();
+                multiConc.put("multiConcChemicalCountActive", assay.getMultiConcChemicalCountActive());
+                multiConc.put("multiConcChemicalCountTotal", assay.getMultiConcChemicalCountTotal());
+                map.put("multiConc", List.of(multiConc));
 
-	        List<Map<String, Object>> geneArray = (List<Map<String, Object>>) formattedAssay.get("geneArray");
-	        Map<String, Object> geneMap = new LinkedHashMap<>();
-	        geneMap.put("entrezGeneId", assay.getEntrezGeneId());
-	        geneMap.put("geneName", assay.getGeneName());
-	        geneMap.put("geneSymbol", assay.getGeneSymbol());
-	        geneArray.add(geneMap);
-	    }
+                return map;
+            });
 
-	    return new ArrayList<>(assayMap.values());
-	}
+            List<Map<String, Object>> geneArray = (List<Map<String, Object>>) formattedAssay.get("geneArray");
+            Map<String, Object> geneMap = new LinkedHashMap<>();
+            geneMap.put("entrezGeneId", assay.getEntrezGeneId());
+            geneMap.put("geneName", assay.getGeneName());
+            geneMap.put("geneSymbol", assay.getGeneSymbol());
+            geneMap.put("officialSymbol", assay.getOfficialSymbol());
+            geneArray.add(geneMap);
+        }
+
+        return new ArrayList<>(assayMap.values());
+    }
 
 }
