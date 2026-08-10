@@ -53,6 +53,7 @@ public class AssayService {
 	                    parsed = mapper.readValue(rawJson, new TypeReference<List<Map<String, Object>>>() {});
                     }
                 } catch (Exception e) {
+                    log.warn("Failed to parse assayList JSON for aeid={}", aeid, e);
                 }
                 map.put("assayList", parsed);
 
