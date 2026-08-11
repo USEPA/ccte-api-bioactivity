@@ -14,8 +14,10 @@ public interface CcdAssayList extends AssayBase {
     String getCcdAssayDetail();    
     String getEntrezGeneId();    
     String getGeneName();    
+    @Deprecated
     String getGeneSymbol();    
     String getOfficialSymbol();
+    CcdAssayGene getGene();
     String getCommonName();    
     String getTaxonName();    
     String getAssayList();    

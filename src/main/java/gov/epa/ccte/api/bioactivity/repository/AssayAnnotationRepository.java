@@ -37,7 +37,6 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
     			maa.assay_desc || ' <br> ' || maa.assay_component_desc || '<br>' || maa.assay_component_endpoint_desc AS ccdAssayDetail,
     			gene_elem->>'entrez_gene_id' AS entrezGeneId,
     			gene_elem->>'gene_name' AS geneName,
-    			gene_elem->>'gene_symbol' AS geneSymbol,
                         gene_elem->>'official_symbol' as officialSymbol,
     			maa.common_name AS commonName,
     			maa.taxon_name AS taxonName,
@@ -69,7 +68,6 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
             	WHEN agg.active_sc IS NOT NULL THEN CONCAT(agg.active_sc, '/', agg.total_sc, '(', CAST(CAST(ROUND((agg.active_sc/agg.total_sc*100),2) AS DECIMAL(5,2)) AS varchar(5)), '%)')
             END AS singleConcActive,
             	maa.assay_component_endpoint_desc AS assayComponentEndpointDesc,
-                gene_elem->>'gene_symbol' AS geneSymbol,
                 gene_elem->>'official_symbol' as officialSymbol
             FROM 
                 invitro.mv_assay_annotation maa
@@ -78,8 +76,8 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
             ON 
                 maa.aeid = agg.aeid, 
                 json_array_elements(maa.gene) AS gene_elem
-            WHERE gene_elem->>'gene_symbol' = :geneSymbol
-               OR gene_elem->>'official_symbol' = :geneSymbol
+            WHERE 
+                gene_elem->>'official_symbol' = :geneSymbol
             """, nativeQuery = true)
         List<AssayEndpointsList> findAssayEndpointsListByGene(@Param("geneSymbol")String geneSymbol);
 }

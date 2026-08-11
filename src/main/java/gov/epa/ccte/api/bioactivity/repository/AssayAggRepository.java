@@ -90,9 +90,9 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 
 	@Query(value = """
 			    SELECT aeid,
-			           element ->> 'entrez_gene_id' AS entrezGeneId,
-			           element ->> 'gene_name'      AS geneName,
-			           element ->> 'gene_symbol'    AS geneSymbol
+			           element ->> 'entrez_gene_id'   AS entrezGeneId,
+			           element ->> 'gene_name'        AS geneName,
+			           element ->> 'official_symbol'  AS officialSymbol,
 			    FROM invitro.mv_assay_annotation maa,
 			         jsonb_array_elements(maa.gene\\:\\:jsonb) AS element
 			    WHERE gene IS NOT NULL AND aeid = :aeid
