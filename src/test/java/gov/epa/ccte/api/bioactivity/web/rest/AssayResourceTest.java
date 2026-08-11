@@ -281,7 +281,7 @@ public class AssayResourceTest {
     	ccdAssayGene = factory.createProjection(CcdAssayGene.class);
     	ccdAssayGene.setEntrezGeneId(389434);
     	ccdAssayGene.setGeneName("iodotyrosine deiodinase");
-    	ccdAssayGene.setGeneSymbol("IYD");
+        ccdAssayGene.setOfficialSymbol("IYD");
     	
         /// Created to insert into ccdAssayList for result
     	serviceAssayList = AssayList.builder()
@@ -292,7 +292,7 @@ public class AssayResourceTest {
     	serviceGene = factory.createProjection(CcdAssayGene.class);
     	serviceGene.setServiceEntrezGeneId("2099");
     	serviceGene.setGeneName("estrogen receptor 1");
-    	serviceGene.setGeneSymbol("ESR1");
+    	serviceGene.setOfficialSymbol("ESR1");
     	
     	singleConc = factory.createProjection(CcdAssayList.class);
     	singleConc.setSingleConcChemicalCountActive(null);
@@ -426,7 +426,7 @@ public class AssayResourceTest {
         		.param("projection", "ccd-assay-gene"))
 				.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].geneSymbol").value(ccdAssayGene.getGeneSymbol()));
+                .andExpect(jsonPath("$[0].officialSymbol").value(ccdAssayGene.getOfficialSymbol()));
     
     }
     
@@ -589,20 +589,24 @@ public class AssayResourceTest {
         		map.put("ccdAssayDetail", ccdAssayList.getCcdAssayDetail());
         		map.put("commonName", ccdAssayList.getCommonName());
         		map.put("taxonName", ccdAssayList.getTaxonName());
-        		map.put("assayList", ccdAssayList.setParsedAssayList(assayList));
-        		map.put("geneArray", ccdAssayList.setGene(ccdAssayGene));
-        		map.put("singleConc", ccdAssayList.setSingleConc(singleConc));
-        		map.put("multiConc", ccdAssayList.setMulticonc(multiConc));
+        		map.put("assayList", assayList);
+        		map.put("geneArray", List.of(ccdAssayGene));
+        		map.put("singleConc", singleConc);
+        		map.put("multiConc", multiConc);
+                        map.put("geneSymbol", ccdAssayList.getGeneSymbol());
+                        map.put("officialSymbol", ccdAssayList.getOfficialSymbol());
         		return map;});
+                System.out.println(assayMap);
         final List<Map<String,Object>> result = new ArrayList<>(assayMap.values());
 
-        when(assayService.wrapCcdAssayList(assayAnnotationRepository.findAssayAnnotations(CcdAssayList.class))).thenReturn(result);
+        when(assayService.fetchCcdAssayList()).thenReturn(result);
 
         mockMvc.perform(get("/bioactivity/assay/")
         		.param("projection", "ccd-assay-list"))
 				.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].aeid").value(ccdAssayList.getAeid()));
+                .andExpect(jsonPath("$[0].aeid").value(ccdAssayList.getAeid()))
+                .andExpect(jsonPath("$[0].geneArray[0].officialSymbol").value(ccdAssayGene.getOfficialSymbol()));
     
     }
     
