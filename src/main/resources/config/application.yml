@@ -79,7 +79,12 @@ application:
   api-env: "Production Environment"
   api-url: "https://comptox.epa.gov/ctx-api"
   batch-size: 200
-
+  
+sentry:
+  dsn: "https://0c80c4f04163bcbc3091bae900f2bdf4@ccte-app-monitoring.epa.gov/74"
+  traces-sample-rate: 1.0  # Captures 100% of transactions for performance monitoring
+  environment: "${spring.profiles.active:default}"
+    
 # CORS is disabled by default on microservices, as you should access them through a gateway.
 # If you want to enable it, please uncomment the configuration below.
 # cors:

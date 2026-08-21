@@ -94,7 +94,7 @@ public interface AssayApi {
     })
     @PostMapping(value = "/search/by-aeid/")
     @ResponseBody
-    List<AssayAll> batchSearchAssayByAeid(@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, description = "JSON array of DSSTox Substance Identifiers",
+    List<AssayAll> batchSearchAssayByAeid(@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, description = "JSON array of ToxCast assay component endpoint IDs (AEIDs)",
             content = {@Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
                     examples = {@ExampleObject("\"[\\\"111\\\",\\\"3032\\\"]\"")})})
                                                     @RequestBody String[] aeids);

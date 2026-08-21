@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class AssayResource implements AssayApi {
+
     final private AssayAnnotationRepository annotationRepository;
     final private AssayAggRepository assayAggRepository;
     final private AOPRepository aopRepository;
@@ -23,23 +26,8 @@ public class AssayResource implements AssayApi {
     private final BioactivityDataRepository dataRepository;
     private final BioactivityScRepository bioactivityScRepository;
 
-
-    @Value("200")
+    @Value("${application.batch-size:200}")
     private Integer batchSize;
-
-    public AssayResource(AssayAnnotationRepository annotationRepository,
-                         AssayAggRepository assayAggRepository,
-                         AOPRepository aopRepository, AssayService assayService,
-                         BioactivityDataRepository dataRepository,
-                         BioactivityScRepository bioactivityScRepository) {
-
-        this.annotationRepository = annotationRepository;
-        this.assayAggRepository = assayAggRepository;
-        this.aopRepository = aopRepository;
-        this.assayService = assayService;
-        this.dataRepository = dataRepository;
-        this.bioactivityScRepository = bioactivityScRepository;
-    }
 
     @Override
     public List<?> assayByAeid(Integer aeid, String projection) {
@@ -102,12 +90,15 @@ public class AssayResource implements AssayApi {
     public List<?> allAssays(String projection) {
 
         return switch (projection) {
-            case "ccd-assay-list" ->
-                    assayService.wrapCcdAssayList(annotationRepository.findAssayAnnotations(CcdAssayList.class));
+            case "ccd-assay-list" -> fetchCcdAssayList();
             case "assay-all" -> annotationRepository.findBy(AssayAll.class);
             default -> annotationRepository.findBy(AssayAll.class);
         };
 
+    }
+    
+    private List<?> fetchCcdAssayList() {
+        return assayService.fetchCcdAssayList();
     }
 
     @Override

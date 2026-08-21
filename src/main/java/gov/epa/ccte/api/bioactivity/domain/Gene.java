@@ -23,6 +23,7 @@ public class Gene implements Serializable {
     private String geneName;
     private String description;
     @JsonAlias("gene_symbol")
+    @Deprecated
     private String geneSymbol;
     @JsonAlias("organism_id")
     private Integer organismId;
