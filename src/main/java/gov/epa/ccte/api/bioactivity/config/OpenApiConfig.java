@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Computational Toxicology and Exposure (CTX) APIs - CTX Bioactivity API",
-                description = "The CTX Bioactivity API is part of US EPA's Computational Toxicology and Exposure APIs. The CTX Bioactivity API provides programmtic access to bioactivity data through a set of endpoints.",
+                description = "The CTX Bioactivity API is part of US EPA's Computational Toxicology and Exposure APIs. The CTX Bioactivity API provides programmatic access to bioactivity data through a set of endpoints.",
                 contact = @Contact(
                         name = "",
                         url = "",
