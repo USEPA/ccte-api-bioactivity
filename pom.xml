@@ -17,7 +17,6 @@
 		<java.version>17</java.version>
 		<mapstruct.version>1.5.3.Final</mapstruct.version>
 		<sentry.version>8.18.0</sentry.version>
-		<lombok.version>1.18.30</lombok.version>
 	</properties>
         <distributionManagement>
         	<repository>
