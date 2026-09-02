@@ -25,6 +25,7 @@ jobs:
         uses: USEPA/ccte-container-scan@main
         with:
           image_name: api-bioactivity-security-cs
+          base-image: ghcr.io/usepa/jdk-17:latest
           dockerfile: Dockerfile
           output_path: ./output/bioactivity-report.html
           cleanup_path: /data/watchtower/ctx-API/container-results/api-bioactivity/bioactivity-report.html
