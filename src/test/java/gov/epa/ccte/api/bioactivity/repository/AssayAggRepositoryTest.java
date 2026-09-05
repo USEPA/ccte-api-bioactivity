@@ -1,8 +1,8 @@
 package gov.epa.ccte.api.bioactivity.repository;
 
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,14 +11,13 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.*;
+import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.EMBEDDED;
+import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES;
 
-@DataJpaTest
+@DataJpaTest(properties = "spring.jpa.properties.hibernate.connection.provider_disables_autocommit=false")
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureEmbeddedDatabase(type = POSTGRES, provider = EMBEDDED)
 public class AssayAggRepositoryTest {
-
-    private static final String POSTGRES_ONLY_MESSAGE =
-            "Skipping PostgreSQL JSON query test on non-PostgreSQL database";
 
     @Autowired
     private DataSource dataSource;
@@ -59,7 +58,6 @@ public class AssayAggRepositoryTest {
     
     @Test
     void testCCDCitationByAeid() {
-        TestDatabaseAssumptions.assumePostgreSql(dataSource, POSTGRES_ONLY_MESSAGE);
         assertThat(repository.findCitationsByAeid(111)).isNotNull();
 
         assertThat(repository.findCitationsByAeid(3032)).isNotNull();
@@ -67,7 +65,6 @@ public class AssayAggRepositoryTest {
 
     @Test
     void testCCDGeneByAeid() {
-        TestDatabaseAssumptions.assumePostgreSql(dataSource, POSTGRES_ONLY_MESSAGE);
         assertThat(repository.findGeneByAeid(111)).isNotNull();
 
         assertThat(repository.findGeneByAeid(3032)).isNotNull();
@@ -75,8 +72,6 @@ public class AssayAggRepositoryTest {
 
     @Test
     void testCCDTcplByAeid() {
-        TestDatabaseAssumptions.assumePostgreSql(dataSource, POSTGRES_ONLY_MESSAGE);
-
         assertThat(repository.findTcplByAeid(111)).isNotNull();
 
         assertThat(repository.findTcplByAeid(3032)).isNotNull();
@@ -84,7 +79,6 @@ public class AssayAggRepositoryTest {
 
     @Test
     void testCCDReagentByAeid() {
-        TestDatabaseAssumptions.assumePostgreSql(dataSource, POSTGRES_ONLY_MESSAGE);
         assertThat(repository.findReagentByAeid(111)).isNotNull();
 
         assertThat(repository.findReagentByAeid(3032)).isNotNull();
