@@ -13,9 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import java.util.List;
 
@@ -50,8 +51,8 @@ public class DataResource implements DataApi {
         	default -> dataRepository.findByDtxsid(dtxsid, BioactivityDataAll.class);
         };
         
-        if (result instanceof List<?>) {
-            return (List<?>) result;
+        if (result instanceof List<?> list) {
+            return list;
         } else if (result != null) {
             return List.of(result); 
         } else {
@@ -169,7 +170,7 @@ public class DataResource implements DataApi {
 	@Override
 	public List<AedData> getAedDataByDtxsid(String dtxsid) {
 		List<AedRawDataProjection> projections = dataRepository.findAedDataByDtxsid(dtxsid);
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = new JsonMapper();
 
 		return projections.stream().map(p -> {
 			AedData dto = new AedData();
@@ -213,7 +214,7 @@ public class DataResource implements DataApi {
 		}
 
 		List<AedRawDataProjection> results = dataRepository.findAedDataByDtxsidIn(dtxsids);
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = new JsonMapper();
 
 		return results.stream().map(p -> {
 			AedData dto = new AedData();

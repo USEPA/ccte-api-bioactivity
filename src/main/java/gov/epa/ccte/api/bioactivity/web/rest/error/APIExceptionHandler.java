@@ -1,7 +1,7 @@
 package gov.epa.ccte.api.bioactivity.web.rest.error;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.*;
-import org.springframework.lang.NonNull;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,8 +35,8 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 		Map<String, String> errors = new HashMap<>();
 
 		ex.getBindingResult().getAllErrors().forEach((error) -> {
-			if (error instanceof FieldError) {
-				String fieldName = ((FieldError) error).getField();
+			if (error instanceof FieldError fieldError) {
+				String fieldName = fieldError.getField();
 				String message = error.getDefaultMessage();
 				errors.put(fieldName, message);
 			}

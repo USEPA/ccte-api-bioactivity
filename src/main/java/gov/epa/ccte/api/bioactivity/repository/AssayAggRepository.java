@@ -4,7 +4,7 @@ import gov.epa.ccte.api.bioactivity.domain.AssayAgg;
 import gov.epa.ccte.api.bioactivity.projection.assay.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -19,7 +19,7 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
     // *********************** AssayAgg - End *************************************
     // *********************** CCD Assay Annotation Projections - Start *************************************
 	
-@Query(value = """   
+@NativeQuery("""   
    			SELECT aeid,
              assay_component_endpoint_name as AssayComponentEndpointName,
              assay_component_endpoint_desc as AssayComponentEndpointDesc,
@@ -68,10 +68,10 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 
       FROM invitro.mv_assay_annotation
 			WHERE aeid = :aeid
-			""", nativeQuery = true)
+			""")
 	List<CcDAssayAnnotation> findAnnotationByAeid(@Param("aeid") Integer aeid);
 
-	@Query(value = """
+	@NativeQuery("""
 			    SELECT aeid,
 			           assay_component_endpoint_name,
 			           element ->> 'pmid'      AS pmid,
@@ -85,10 +85,10 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 			    FROM invitro.mv_assay_annotation maa,
 			         jsonb_array_elements(maa.citations\\:\\:jsonb) AS element
 			    WHERE maa.citations IS NOT NULL AND aeid = :aeid
-			""", nativeQuery = true)
+			""")
 	List<CcdAssayCitation> findCitationsByAeid(@Param("aeid") Integer aeid);
 
-	@Query(value = """
+	@NativeQuery("""
 			    SELECT aeid,
 			           element ->> 'entrez_gene_id'   AS entrezGeneId,
 			           element ->> 'gene_name'        AS geneName,
@@ -96,10 +96,10 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 			    FROM invitro.mv_assay_annotation maa,
 			         jsonb_array_elements(maa.gene\\:\\:jsonb) AS element
 			    WHERE gene IS NOT NULL AND aeid = :aeid
-			""", nativeQuery = true)
+			""")
 	List<CcdAssayGene> findGeneByAeid(@Param("aeid") Integer aeid);
 
-	@Query(value = """
+	@NativeQuery("""
 		    select row_number() over (
 		               order by assayRunType, levelApplied, methodName
 		           ) as orderId,
@@ -176,10 +176,10 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 		    ) tcpl
 		    where aeid = :aeid
 		    order by assayRunType, levelApplied, methodName
-		    """, nativeQuery = true)
+		    """)
 		List<CcdTcplData> findTcplByAeid(@Param("aeid") Integer aeid);
 
-	@Query(value = """
+	@NativeQuery("""
 		    SELECT 
 		        row_number() OVER (
 		            ORDER BY 
@@ -192,7 +192,7 @@ public interface AssayAggRepository extends JpaRepository<AssayAgg, Long> {
 		    FROM invitro.mv_assay_annotation maa,
 		         jsonb_array_elements(assay_reagent\\:\\:jsonb) AS reagent
 		    WHERE maa.aeid = :aeid
-		""", nativeQuery = true)
+		""")
 		List<CcdReagents> findReagentByAeid(@Param("aeid") Integer aeid);
 
 }

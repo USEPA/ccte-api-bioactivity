@@ -22,11 +22,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -55,7 +55,7 @@ public interface AssayApi {
 	        @ApiResponse(responseCode = "400", description = "Invalid projection type", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ProblemDetail.class}))),
 	        @ApiResponse(responseCode = "404", description = "No data found for the given AEID", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ProblemDetail.class})))
 	})
-	@RequestMapping(value = "/search/by-aeid/{aeid}", method = RequestMethod.GET)
+	@GetMapping("/search/by-aeid/{aeid}")
 	@ResponseBody
 	List<?> assayByAeid(
 	        @Parameter(required = true, description = "ToxCast assay component endpoint ID", example = "3032")
@@ -76,7 +76,7 @@ public interface AssayApi {
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json", schema = @Schema(oneOf = {String.class})))
     })
-    @RequestMapping(value = "/chemicals/search/by-aeid/{aeid}", method = RequestMethod.GET)
+    @GetMapping("/chemicals/search/by-aeid/{aeid}")
     @ResponseBody
     List<?> chemicalsByAeid(@Parameter(required = true, description = "ToxCast assay component endpoint ID", example = "3032") @PathVariable("aeid") Integer aeid,
     		                     @RequestParam(value = "projection", required = false, defaultValue = "dtxsidsonly") String projection);
@@ -106,7 +106,7 @@ public interface AssayApi {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and aeid for the assay endpoint name
      */
     @Operation(summary = "Get AEID by assay component endpoint name")
-    @RequestMapping(value = "/search/by-endpoint/", method = RequestMethod.GET)
+    @GetMapping("/search/by-endpoint/")
     @ResponseBody
     Long aeidByAssayEndpointName(@RequestParam(required = true, value = "endpoint") String assayComponentEndpointName);
 
@@ -120,7 +120,7 @@ public interface AssayApi {
     @ApiResponses(value= {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json", schema = @Schema(oneOf = {CcdSingleConcData.class})))
     })
-    @RequestMapping(value = "/single-conc/search/by-aeid/{aeid}", method = RequestMethod.GET)
+    @GetMapping("/single-conc/search/by-aeid/{aeid}")
     @ResponseBody
     List<?> singleConcDataByAeid(@Parameter(required = true, description = "ToxCast assay component endpoint ID", example = "3032") @PathVariable("aeid") Integer aeid
             , @RequestParam(value = "projection", required = false, defaultValue = "single-conc") String projection
@@ -138,7 +138,7 @@ public interface AssayApi {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {AssayAnnotation.class}))),
     })
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     @ResponseBody
     List<?> allAssays(@RequestParam(value = "projection", required = false, defaultValue = "assay-all") String projection);
     
@@ -153,7 +153,7 @@ public interface AssayApi {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {AssayEndpointsList.class}))),
     })
-    @RequestMapping(value = "/search/by-gene/{geneSymbol}", method = RequestMethod.GET)
+    @GetMapping("/search/by-gene/{geneSymbol}")
     @ResponseBody
     List<AssayEndpointsList> assayEndpointsListByGene(@Parameter(required = true, description = "Gene Symbol", example = "TUBA1A") @PathVariable("geneSymbol") String geneSymbol);
 
@@ -164,7 +164,7 @@ public interface AssayApi {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and total count of all assay
      */
     @Operation(summary = "Get total assay count")
-    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    @GetMapping("/count")
     @ResponseBody
     Long assayCount();
 }

@@ -7,8 +7,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
 import gov.epa.ccte.api.bioactivity.projection.assay.CcdAssayGene;
 
 import gov.epa.ccte.api.bioactivity.projection.assay.CcdAssayList;
@@ -21,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AssayService {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new JsonMapper();
     private final AssayAnnotationRepository repo;
 
     public List<Map<String, Object>> fetchCcdAssayList() {
