@@ -5,6 +5,7 @@ import gov.epa.ccte.api.bioactivity.projection.assay.AssayAll;
 import gov.epa.ccte.api.bioactivity.projection.assay.AssayEndpointsList;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -25,7 +26,7 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
     
     <T> List<T> findBy(Class<T> type);
     
-    @Query(value = """
+    @NativeQuery("""
             SELECT 
     			maa.assay_source_name AS vendorKey,
     			maa.assay_source_desc AS vendorName,
@@ -55,10 +56,10 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
     			json_array_elements(maa.gene) AS gene_elem
     		ON 
     			maa.gene IS NOT NULL;
-            """, nativeQuery = true)
+            """)
         <T> List<T> findAssayAnnotations(Class<T> type);
 
-    @Query(value = """
+    @NativeQuery("""
             SELECT maa.aeid,
                 maa.assay_component_endpoint_name AS assayComponentEndpointName,
             CASE 
@@ -78,6 +79,6 @@ public interface AssayAnnotationRepository extends JpaRepository<AssayAnnotation
                 json_array_elements(maa.gene) AS gene_elem
             WHERE 
                 gene_elem->>'official_symbol' = :geneSymbol
-            """, nativeQuery = true)
+            """)
         List<AssayEndpointsList> findAssayEndpointsListByGene(@Param("geneSymbol")String geneSymbol);
 }

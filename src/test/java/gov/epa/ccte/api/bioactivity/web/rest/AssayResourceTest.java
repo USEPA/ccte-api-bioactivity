@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.http.MediaType;
@@ -15,7 +15,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
 import static org.hamcrest.CoreMatchers.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -490,7 +492,7 @@ public class AssayResourceTest {
     void testGetAssayByBatchAeid() throws Exception {
         final List<AssayAll> assays = Collections.singletonList(assayAll);
         String[] jsonArray = {"3032"};
-        String jsonBody = new ObjectMapper().writeValueAsString(jsonArray);
+        String jsonBody = new JsonMapper().writeValueAsString(jsonArray);
 
         when(assayAnnotationRepository.findByAeidInOrderByAeidAsc(jsonArray, AssayAll.class)).thenReturn(assays);
 

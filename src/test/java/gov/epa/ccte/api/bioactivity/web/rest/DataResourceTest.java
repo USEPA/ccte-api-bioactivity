@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.http.MediaType;
@@ -15,7 +15,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.Mockito.when;
@@ -191,7 +193,7 @@ public class DataResourceTest {
     void testGetDataByBatchDtxsid() throws Exception {
         final List<BioactivityDataAll> data = Collections.singletonList(bioactivityDataAll);
         String[] jsonArray = {"DTXSID1027891"};
-        String jsonBody = new ObjectMapper().writeValueAsString(jsonArray);
+        String jsonBody = new JsonMapper().writeValueAsString(jsonArray);
         
         when(bioactivityDataRepository.findByDtxsidInOrderByDtxsidAsc(jsonArray, BioactivityDataAll.class)).thenReturn(data);
 
@@ -222,7 +224,7 @@ public class DataResourceTest {
     void testGetDataByBatchAeid() throws Exception {
         final List<BioactivityDataAll> data = Collections.singletonList(bioactivityDataAll);
         String[] jsonArray = {"3032"};
-        String jsonBody = new ObjectMapper().writeValueAsString(jsonArray);
+        String jsonBody = new JsonMapper().writeValueAsString(jsonArray);
         
         when(bioactivityDataRepository.findByAeidInOrderByAeidAsc(jsonArray, BioactivityDataAll.class)).thenReturn(data);
 
@@ -253,7 +255,7 @@ public class DataResourceTest {
     void testGetDataByBatchSpid() throws Exception {
         final List<BioactivityDataAll> data = Collections.singletonList(bioactivityDataAll);
         String[] jsonArray = {"EPAPLT0137A10"};
-        String jsonBody = new ObjectMapper().writeValueAsString(jsonArray);
+        String jsonBody = new JsonMapper().writeValueAsString(jsonArray);
         
         when(bioactivityDataRepository.findBySpidInOrderBySpidAsc(jsonArray, BioactivityDataAll.class)).thenReturn(data);
 
@@ -284,7 +286,7 @@ public class DataResourceTest {
     void testGetDataByBatchM4id() throws Exception {
         final List<BioactivityDataAll> data = Collections.singletonList(bioactivityDataAll);
         String[] jsonArray = {"7827467"};
-        String jsonBody = new ObjectMapper().writeValueAsString(jsonArray);
+        String jsonBody = new JsonMapper().writeValueAsString(jsonArray);
         
         when(bioactivityDataRepository.findByM4idInOrderByM4idAsc(jsonArray, BioactivityDataAll.class)).thenReturn(data);
 
@@ -341,7 +343,7 @@ public class DataResourceTest {
     void testGetAedDataByBatchDtxsid() throws Exception {
         final List<AedRawDataProjection> data = Collections.singletonList(aedRawDataProjection);
         String[] jsonArray = {"DTXSID7020182"};
-        String jsonBody = new ObjectMapper().writeValueAsString(jsonArray);
+        String jsonBody = new JsonMapper().writeValueAsString(jsonArray);
         
         when(bioactivityDataRepository.findAedDataByDtxsidIn(jsonArray)).thenReturn(data);
 

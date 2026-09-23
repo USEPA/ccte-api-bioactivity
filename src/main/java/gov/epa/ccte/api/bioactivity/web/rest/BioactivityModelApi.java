@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.epa.ccte.api.bioactivity.domain.BioactivityModel;
@@ -40,7 +40,7 @@ public interface BioactivityModelApi {
                     content = @Content( mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = BioactivityModel.class))))
     })
-    @RequestMapping(value = "/search/by-dtxsid/{dtxsid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/by-dtxsid/{dtxsid}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<BioactivityModel> getBioactivityModelByDtxsid(@Parameter(required = true, description = "dtxsid", example = "DTXSID7020182")@PathVariable("dtxsid") String dtxsid);
     
@@ -57,7 +57,7 @@ public interface BioactivityModelApi {
                     content = @Content( mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = BioactivityModel.class))))
     })
-    @RequestMapping(value = "/search/",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<BioactivityModel> getBioactivityModelByDtxsidAndModel(@Parameter(required = true, description = "dtxsid", example = "DTXSID7020182")String dtxsid,
     		@Parameter(required = true, description = "model", example = "CERAPP ")String model);

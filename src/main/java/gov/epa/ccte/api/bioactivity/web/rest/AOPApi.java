@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.epa.ccte.api.bioactivity.domain.AOP;
@@ -40,7 +40,7 @@ public interface AOPApi {
                     content = @Content( mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = AOP.class))))
     })
-    @RequestMapping(value = "/search/by-toxcast-aeid/{toxcastAeid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/by-toxcast-aeid/{toxcastAeid}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<AOP> dataByToxcastAeid(@Parameter(required = true, description = "ToxCast AEID", example = "63")@PathVariable("toxcastAeid") Integer toxcastAeid);
     
@@ -56,7 +56,7 @@ public interface AOPApi {
                     content = @Content( mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = AOP.class))))
     })
-    @RequestMapping(value = "/search/by-entrez-gene-id/{entrezGeneId}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/by-entrez-gene-id/{entrezGeneId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<AOP> dataByEntrezGeneId(@Parameter(required = true,  description = "Entrez Gene Id",example = "196")@PathVariable("entrezGeneId") Integer entrezGeneId);
     
@@ -72,7 +72,7 @@ public interface AOPApi {
                     content = @Content( mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = AOP.class))))
     })
-    @RequestMapping(value = "/search/by-event-number/{eventNumber}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/by-event-number/{eventNumber}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<AOP> dataByEventNumber(@Parameter(required = true,  description = "Key Event Number", example = "18")@PathVariable("eventNumber") Integer eventNumber);
 }

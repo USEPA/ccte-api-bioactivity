@@ -42,7 +42,7 @@ public interface DataApi {
                     content = @Content( mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(oneOf = {BioactivityDataAll.class}))))
     })
-    @RequestMapping(value = "/search/by-dtxsid/{dtxsid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/search/by-dtxsid/{dtxsid}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<?> dataByDtxsid(@Parameter(required = true, description = "DSSTox Substance Identifier", example = "DTXSID7020182") 
                                          @PathVariable("dtxsid") String dtxsid,
                              	        @Parameter(description = "Specifies if projection is used. Option: toxcast-summary-plot. " +
@@ -79,7 +79,7 @@ public interface DataApi {
                     content = @Content( mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = BioactivityDataAll.class))))
     })
-    @RequestMapping(value = "/search/by-aeid/{aeid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/by-aeid/{aeid}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<BioactivityDataAll> dataByAeid(@Parameter(required = true, description = "ToxCast assay component endpoint ID (AEID)", example = "3032")
                     @PathVariable("aeid") Integer aeid);
@@ -114,7 +114,7 @@ public interface DataApi {
                     content = @Content( mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = BioactivityDataAll.class))))
     })
-    @RequestMapping(value = "/search/by-spid/{spid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/by-spid/{spid}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<BioactivityDataAll> dataBySpid(@Parameter(required = true, description = "sample ID (SPID)", example = "EPAPLT0232A03")
                     @PathVariable("spid") String spid);
@@ -148,7 +148,7 @@ public interface DataApi {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {BioactivityDataAll.class}))),
     })
-    @RequestMapping(value = "/search/by-m4id/{m4id}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/search/by-m4id/{m4id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<BioactivityDataAll> dataByM4Id(@Parameter(required = true, description = "M4ID", example = "7826737")
                                    @PathVariable("m4id") Integer m4id);
@@ -182,7 +182,7 @@ public interface DataApi {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {AssayAgg.class}))),
     })
-    @RequestMapping(value = "/summary/search/by-aeid/{aeid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/summary/search/by-aeid/{aeid}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<AssayAgg> summaryByAeid(@Parameter(required = true, description = "ToxCast assay component endpoint ID (AEID)", example = "3032")
                                  @PathVariable("aeid") Integer aeid);
@@ -198,7 +198,7 @@ public interface DataApi {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {ChemicalAgg.class}))),
     })
-    @RequestMapping(value = "/summary/search/by-dtxsid/{dtxsid}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/summary/search/by-dtxsid/{dtxsid}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List summaryByDtxsid(@Parameter(required = true, description = "DSSTox Substance Identifier", example = "DTXSID9026974")
                                  @PathVariable("dtxsid")String dtxsid);
@@ -237,7 +237,7 @@ public interface DataApi {
             @ApiResponse(responseCode = "200", description = "OK",  content = @Content( mediaType = "application/json",
                     schema=@Schema(oneOf = {SummaryByTissue.class}))),
     })
-    @RequestMapping(value = "/summary/search/by-tissue/",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @GetMapping(value = "/summary/search/by-tissue/",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<SummaryByTissue> summaryByDtxsidAndTissue(@Parameter(required = true, description = "DSSTox Substance Identifier", example = "DTXSID7024241")String dtxsid,
                                  @Parameter(required = true, description = "assay format's tissue of origin", example = "liver")String tissue);
