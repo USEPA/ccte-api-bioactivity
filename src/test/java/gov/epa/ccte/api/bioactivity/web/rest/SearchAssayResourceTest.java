@@ -12,8 +12,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,7 +25,6 @@ import gov.epa.ccte.api.bioactivity.service.SearchAssayService;
 
 @ActiveProfiles("test")
 @WebMvcTest(SearchAssayResource.class)
-@RunWith(MockitoJUnitRunner.class)
 
 public class SearchAssayResourceTest {
 

@@ -2,6 +2,8 @@ package gov.epa.ccte.api.bioactivity.web.rest;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,7 +37,7 @@ public class BioactivityResource {
 
                 return ResponseEntity.ok().build();
 
-            } catch (Exception ep){
+            } catch (DataAccessException ep){
                 return ResponseEntity.notFound().build();
             }
         }else {

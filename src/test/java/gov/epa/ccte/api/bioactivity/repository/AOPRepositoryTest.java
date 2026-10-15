@@ -5,37 +5,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Testcontainers
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AOPRepositoryTest {
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer<?> pgsqldb = new PostgreSQLContainer<>("postgres:16-alpine");
 
     @Autowired
     private DataSource dataSource;
     @Autowired private JdbcTemplate jdbcTemplate;
     @Autowired private TestEntityManager entityManager;
     @Autowired private AOPRepository repository;
-
-    @Test
-    void connectionEstablished(){
-        assertThat(pgsqldb.isCreated()).isTrue();
-        assertThat(pgsqldb.isRunning()).isTrue();
-    }
 
     @Test
     void injectedComponentsAreNotNull() {
