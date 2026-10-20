@@ -42,17 +42,6 @@ public interface BioactivityDataRepository extends JpaRepository<BioactivityData
     <T>List<T> findBySpidInOrderBySpidAsc(String[] spids, Class<T> type);
     
 	@Query(value = """
-			    SELECT b.dsstox_substance_id AS dsstoxSubstanceId,
-			           d.preferred_name AS preferredName,
-			           b.aeid AS aeid,
-			           b.mc7_param AS mc7Param
-			    FROM invitro.mv_bioactivity b
-			    JOIN ch.v_chemical_details d ON b.dsstox_substance_id = d.dtxsid
-			    WHERE b.dsstox_substance_id = :dtxsid AND b.mc7_param IS NOT NULL
-			""", nativeQuery = true)
-	List<AedRawDataProjection> findAedDataByDtxsid(@Param("dtxsid") String dtxsid);
-
-	@Query(value = """
 			SELECT
 			    b.dsstox_substance_id   AS dsstoxSubstanceId,
 			    d.preferred_name        AS preferredName,
