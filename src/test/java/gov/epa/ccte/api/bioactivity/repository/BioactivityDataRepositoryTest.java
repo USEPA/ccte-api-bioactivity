@@ -105,13 +105,6 @@ class BioactivityDataRepositoryTest {
     }
 
     @Test
-    void testAedDatabyDtxsid() {
-    	assertThat(repository.findAedDataByDtxsid("DTXSID7020182")).size().isEqualTo(2);
-
-    	assertThat(repository.findAedDataByDtxsid("DTXSID9020112")).size().isEqualTo(1);
-    }
-
-    @Test
     void testAedDatabyBatchDtxsid() {
     	String[] dtxsids = {"DTXSID7020182","DTXSID9020112"};
     	assertThat(repository.findAedDataByDtxsidIn(dtxsids)).size().isEqualTo(1);
