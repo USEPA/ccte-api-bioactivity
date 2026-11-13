@@ -1,5 +1,6 @@
 package gov.epa.ccte.api.bioactivity.repository;
 
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -9,10 +10,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.sql.DataSource;
 
+import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.EMBEDDED;
+import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES;
 import static org.assertj.core.api.Assertions.*;
 
-@DataJpaTest
+@DataJpaTest(properties = "spring.jpa.properties.hibernate.connection.provider_disables_autocommit=false")
 @ActiveProfiles("test")
+@AutoConfigureEmbeddedDatabase(type = POSTGRES, provider = EMBEDDED)
 public class AnalyticalQCRepositoryTest {
 
     @Autowired

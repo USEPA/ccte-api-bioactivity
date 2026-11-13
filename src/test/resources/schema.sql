@@ -1,5 +1,3 @@
-SET MODE PostgreSQL;
-
 CREATE SCHEMA aop;
 
 CREATE TABLE aop.mv_toxcast_aop_map (
