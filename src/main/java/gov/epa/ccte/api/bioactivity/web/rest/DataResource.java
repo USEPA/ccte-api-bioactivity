@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.util.Arrays;
 
 import java.util.List;
 
@@ -24,14 +23,16 @@ import java.util.List;
 @RestController
 public class DataResource implements DataApi {
 
+    private final ObjectMapper objectMapper;
     private final BioactivityDataRepository dataRepository;
     private final AssayAggRepository assayAggRepository;
     private final ChemicalAggRepository chemAggRepository;
-
+    
     @Value("${application.batch-size:200}")
     private Integer batchSize;
 
-    public DataResource(BioactivityDataRepository dataRepository, AssayAggRepository assayAggRepository, ChemicalAggRepository chemAggRepository) {
+    public DataResource(ObjectMapper objectMapper, BioactivityDataRepository dataRepository, AssayAggRepository assayAggRepository, ChemicalAggRepository chemAggRepository) {
+        this.objectMapper = objectMapper;
         this.dataRepository = dataRepository;
         this.assayAggRepository = assayAggRepository;
         this.chemAggRepository = chemAggRepository;
@@ -195,7 +196,6 @@ public class DataResource implements DataApi {
     }
 
     private AedData mapRawToAedData(AedRawDataProjection p) {
-        ObjectMapper mapper = new ObjectMapper();
         AedData dto = new AedData();
         dto.setDtxsid(p.getDsstoxSubstanceId());
         dto.setPreferredName(p.getPreferredName());
@@ -203,23 +203,23 @@ public class DataResource implements DataApi {
         dto.setAenm(p.getAenm());
 
         try {
-            JsonNode node = mapper.readTree(p.getMc7Param());
-            dto.setAedVal(mapper.convertValue(node.get("aed_val"), new TypeReference<>() {
+            JsonNode node = objectMapper.readTree(p.getMc7Param());
+            dto.setAedVal(objectMapper.convertValue(node.get("aed_val"), new TypeReference<>() {
             }));
-            dto.setAedType(mapper.convertValue(node.get("aed_type"), new TypeReference<>() {
+            dto.setAedType(objectMapper.convertValue(node.get("aed_type"), new TypeReference<>() {
             }));
-            dto.setHttkModel(mapper.convertValue(node.get("httk_model"), new TypeReference<>() {
+            dto.setHttkModel(objectMapper.convertValue(node.get("httk_model"), new TypeReference<>() {
             }));
-            dto.setAedValUnit(mapper.convertValue(node.get("aed_val_unit"), new TypeReference<>() {
+            dto.setAedValUnit(objectMapper.convertValue(node.get("aed_val_unit"), new TypeReference<>() {
             }));
-            dto.setHttkVersion(mapper.convertValue(node.get("httk_version"), new TypeReference<>() {
+            dto.setHttkVersion(objectMapper.convertValue(node.get("httk_version"), new TypeReference<>() {
             }));
-            dto.setPotencyValType(mapper.convertValue(node.get("potency_val_type"), new TypeReference<>() {
+            dto.setPotencyValType(objectMapper.convertValue(node.get("potency_val_type"), new TypeReference<>() {
             }));
-            dto.setInvitrodbVersion(mapper.convertValue(node.get("invitrodb_version"), new TypeReference<>() {
+            dto.setInvitrodbVersion(objectMapper.convertValue(node.get("invitrodb_version"), new TypeReference<>() {
             }));
             dto.setInterindividualVarPerc(
-                    mapper.convertValue(node.get("interindividual_var_perc"), new TypeReference<>() {
+                    objectMapper.convertValue(node.get("interindividual_var_perc"), new TypeReference<>() {
                     }));
         } catch (Exception e) {
             log.error("Failed to parse mc7_param for dtxsid={}", p.getDsstoxSubstanceId(), e);
