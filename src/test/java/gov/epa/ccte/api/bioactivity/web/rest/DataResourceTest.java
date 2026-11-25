@@ -328,7 +328,7 @@ public class DataResourceTest {
     void testGetAedDataByDtxsid() throws Exception {
         final List<AedRawDataProjection> data = Collections.singletonList(aedRawDataProjection);
 
-        when(bioactivityDataRepository.findAedDataByDtxsid("DTXSID9026974")).thenReturn(data);
+        when(bioactivityDataRepository.findAedDataByDtxsidIn(new String[]{"DTXSID9026974"})).thenReturn(data);
 
         mockMvc.perform(get("/bioactivity/data/aed/search/by-dtxsid/{dtxsid}", "DTXSID9026974"))
 				.andDo(MockMvcResultHandlers.print())

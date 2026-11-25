@@ -19,19 +19,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
 
-
 @Slf4j
 @RestController
 public class DataResource implements DataApi {
 
+    private final ObjectMapper objectMapper;
     private final BioactivityDataRepository dataRepository;
     private final AssayAggRepository assayAggRepository;
     private final ChemicalAggRepository chemAggRepository;
     
     @Value("${application.batch-size:200}")
     private Integer batchSize;
-    
-    public DataResource(BioactivityDataRepository dataRepository, AssayAggRepository assayAggRepository, ChemicalAggRepository chemAggRepository) {
+
+    public DataResource(ObjectMapper objectMapper, BioactivityDataRepository dataRepository, AssayAggRepository assayAggRepository, ChemicalAggRepository chemAggRepository) {
+        this.objectMapper = objectMapper;
         this.dataRepository = dataRepository;
         this.assayAggRepository = assayAggRepository;
         this.chemAggRepository = chemAggRepository;
@@ -39,33 +40,36 @@ public class DataResource implements DataApi {
 
     public List<?> dataByDtxsid(String dtxsid, String projection) {
         log.debug("dtxsid = {}", dtxsid);
-        
+
         if (projection == null || projection.isEmpty()) {
             List<BioactivityDataAll> data = dataRepository.findByDtxsid(dtxsid, BioactivityDataAll.class);
-            return data; 
+            return data;
         }
-        
+
         Object result = switch (projection) {
-        	case "toxcast-summary-plot" -> dataRepository.findToxcastSummaryPlotByDtxsid(dtxsid);
-        	default -> dataRepository.findByDtxsid(dtxsid, BioactivityDataAll.class);
+            case "toxcast-summary-plot" ->
+                dataRepository.findToxcastSummaryPlotByDtxsid(dtxsid);
+            default ->
+                dataRepository.findByDtxsid(dtxsid, BioactivityDataAll.class);
         };
-        
+
         if (result instanceof List<?>) {
             return (List<?>) result;
         } else if (result != null) {
-            return List.of(result); 
+            return List.of(result);
         } else {
-            return List.of(); 
+            return List.of();
         }
     }
-    
+
     @Override
-    public @ResponseBody
-    List<BioactivityDataAll>batchSearchDataByDtxsid(String[] dtxsids) {
+    @ResponseBody
+    public List<BioactivityDataAll> batchSearchDataByDtxsid(String[] dtxsids) {
         log.debug("bioactiivty data for dtxsid size = {}", dtxsids.length);
 
-        if(dtxsids.length > batchSize)
+        if (dtxsids.length > batchSize) {
             throw new HigherNumberOfRequestsException(dtxsids.length, batchSize);
+        }
 
         List<BioactivityDataAll> data = dataRepository.findByDtxsidInOrderByDtxsidAsc(dtxsids, BioactivityDataAll.class);
 
@@ -84,14 +88,15 @@ public class DataResource implements DataApi {
 
         return data;
     }
-    
+
     @Override
     public @ResponseBody
-    List<BioactivityDataAll>batchSearchDataByAeid(String[] aeids) {
+    List<BioactivityDataAll> batchSearchDataByAeid(String[] aeids) {
         log.debug("bioactiivty data for aeid size = {}", aeids.length);
 
-        if(aeids.length > batchSize)
+        if (aeids.length > batchSize) {
             throw new HigherNumberOfRequestsException(aeids.length, batchSize);
+        }
 
         List<BioactivityDataAll> data = dataRepository.findByAeidInOrderByAeidAsc(aeids, BioactivityDataAll.class);
 
@@ -110,14 +115,15 @@ public class DataResource implements DataApi {
 
         return data;
     }
-    
+
     @Override
     public @ResponseBody
-    List<BioactivityDataAll>batchSearchDataBySpid(String[] spids) {
+    List<BioactivityDataAll> batchSearchDataBySpid(String[] spids) {
         log.debug("bioactiivty data for spids size = {}", spids.length);
 
-        if(spids.length > batchSize)
+        if (spids.length > batchSize) {
             throw new HigherNumberOfRequestsException(spids.length, batchSize);
+        }
 
         List<BioactivityDataAll> data = dataRepository.findBySpidInOrderBySpidAsc(spids, BioactivityDataAll.class);
 
@@ -134,14 +140,15 @@ public class DataResource implements DataApi {
 
         return data;
     }
-    
+
     @Override
     public @ResponseBody
     List<BioactivityDataAll> batchSearchDataByM4id(String[] m4ids) {
         log.debug("bioactiivty data for m4ids size = {}", m4ids.length);
 
-        if(m4ids.length > batchSize)
+        if (m4ids.length > batchSize) {
             throw new HigherNumberOfRequestsException(m4ids.length, batchSize);
+        }
 
         List<BioactivityDataAll> data = dataRepository.findByM4idInOrderByM4idAsc(m4ids, BioactivityDataAll.class);
 
@@ -152,108 +159,80 @@ public class DataResource implements DataApi {
     public @ResponseBody
     List<AssayAgg> summaryByAeid(Integer aeid) {
         log.debug("aeid = {}", aeid);
-        
+
         List<AssayAgg> data = assayAggRepository.findByAeid(aeid);
 
-         return data;
+        return data;
     }
-    
+
     @Override
     public @ResponseBody
     List summaryByDtxsid(String dtxsid) {
         log.debug("bioactivity summary data for dtxsid = {}", dtxsid);
 
-         return chemAggRepository.findByDtxsid(dtxsid);
+        return chemAggRepository.findByDtxsid(dtxsid);
     }
-    
-	@Override
-	public List<AedData> getAedDataByDtxsid(String dtxsid) {
-		List<AedRawDataProjection> projections = dataRepository.findAedDataByDtxsid(dtxsid);
-		ObjectMapper mapper = new ObjectMapper();
 
-		return projections.stream().map(p -> {
-			AedData dto = new AedData();
-			dto.setDtxsid(p.getDsstoxSubstanceId());
-			dto.setPreferredName(p.getPreferredName());
-			dto.setAeid(p.getAeid());
+    @Override
+    public List<AedData> getAedDataByDtxsid(String dtxsid) {
+        log.debug("Fetching AED data for dtxsid = {}", dtxsid);
+        return dataRepository.findAedDataByDtxsidIn(new String[]{dtxsid}).stream()
+                .map(p -> mapRawToAedData(p))
+                .toList();
+    }
 
-			try {
-				JsonNode node = mapper.readTree(p.getMc7Param());
-				dto.setAedVal(mapper.convertValue(node.get("aed_val"), new TypeReference<>() {
-				}));
-				dto.setAedType(mapper.convertValue(node.get("aed_type"), new TypeReference<>() {
-				}));
-				dto.setHttkModel(mapper.convertValue(node.get("httk_model"), new TypeReference<>() {
-				}));
-				dto.setAedValUnit(mapper.convertValue(node.get("aed_val_unit"), new TypeReference<>() {
-				}));
-				dto.setHttkVersion(mapper.convertValue(node.get("httk_version"), new TypeReference<>() {
-				}));
-				dto.setPotencyValType(mapper.convertValue(node.get("potency_val_type"), new TypeReference<>() {
-				}));
-				dto.setInvitrodbVersion(mapper.convertValue(node.get("invitrodb_version"), new TypeReference<>() {
-				}));
-				dto.setInterindividualVarPerc(
-						mapper.convertValue(node.get("interindividual_var_perc"), new TypeReference<>() {
-						}));
-			} catch (Exception e) {
-				log.error("Failed to parse mc7_param", e);
-			}
+    @Override
+    public @ResponseBody
+    List<AedData> getAedDataForBatchDtxsids(String[] dtxsids) {
+        log.debug("Fetching AED data for dtxsids size = {}", dtxsids.length);
 
-			return dto;
-		}).toList();
-	}
+        if (dtxsids.length > batchSize) {
+            throw new HigherNumberOfRequestsException(dtxsids.length, batchSize);
+        }
 
-	@Override
-	public @ResponseBody List<AedData> getAedDataForBatchDtxsids(String[] dtxsids) {
-		log.debug("Fetching AED data for dtxsids size = {}", dtxsids.length);
+        return dataRepository.findAedDataByDtxsidIn(dtxsids).stream()
+                .map(p -> mapRawToAedData(p))
+                .toList();
+    }
 
-		if (dtxsids.length > batchSize) {
-			throw new HigherNumberOfRequestsException(dtxsids.length, batchSize);
-		}
+    private AedData mapRawToAedData(AedRawDataProjection p) {
+        AedData dto = new AedData();
+        dto.setDtxsid(p.getDsstoxSubstanceId());
+        dto.setPreferredName(p.getPreferredName());
+        dto.setAeid(p.getAeid());
+        dto.setAenm(p.getAenm());
 
-		List<AedRawDataProjection> results = dataRepository.findAedDataByDtxsidIn(dtxsids);
-		ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode node = objectMapper.readTree(p.getMc7Param());
+            dto.setAedVal(objectMapper.convertValue(node.get("aed_val"), new TypeReference<>() {
+            }));
+            dto.setAedType(objectMapper.convertValue(node.get("aed_type"), new TypeReference<>() {
+            }));
+            dto.setHttkModel(objectMapper.convertValue(node.get("httk_model"), new TypeReference<>() {
+            }));
+            dto.setAedValUnit(objectMapper.convertValue(node.get("aed_val_unit"), new TypeReference<>() {
+            }));
+            dto.setHttkVersion(objectMapper.convertValue(node.get("httk_version"), new TypeReference<>() {
+            }));
+            dto.setPotencyValType(objectMapper.convertValue(node.get("potency_val_type"), new TypeReference<>() {
+            }));
+            dto.setInvitrodbVersion(objectMapper.convertValue(node.get("invitrodb_version"), new TypeReference<>() {
+            }));
+            dto.setInterindividualVarPerc(
+                    objectMapper.convertValue(node.get("interindividual_var_perc"), new TypeReference<>() {
+                    }));
+        } catch (Exception e) {
+            log.error("Failed to parse mc7_param for dtxsid={}", p.getDsstoxSubstanceId(), e);
+        }
 
-		return results.stream().map(p -> {
-			AedData dto = new AedData();
-			dto.setDtxsid(p.getDsstoxSubstanceId());
-			dto.setPreferredName(p.getPreferredName());
-			dto.setAeid(p.getAeid());
-			dto.setAenm(p.getAenm());
-
-			try {
-				JsonNode node = mapper.readTree(p.getMc7Param());
-				dto.setAedVal(mapper.convertValue(node.get("aed_val"), new TypeReference<>() {
-				}));
-				dto.setAedType(mapper.convertValue(node.get("aed_type"), new TypeReference<>() {
-				}));
-				dto.setHttkModel(mapper.convertValue(node.get("httk_model"), new TypeReference<>() {
-				}));
-				dto.setAedValUnit(mapper.convertValue(node.get("aed_val_unit"), new TypeReference<>() {
-				}));
-				dto.setHttkVersion(mapper.convertValue(node.get("httk_version"), new TypeReference<>() {
-				}));
-				dto.setPotencyValType(mapper.convertValue(node.get("potency_val_type"), new TypeReference<>() {
-				}));
-				dto.setInvitrodbVersion(mapper.convertValue(node.get("invitrodb_version"), new TypeReference<>() {
-				}));
-				dto.setInterindividualVarPerc(
-						mapper.convertValue(node.get("interindividual_var_perc"), new TypeReference<>() {
-						}));
-			} catch (Exception e) {
-				log.error("Failed to parse mc7_param for dtxsid={}", p.getDsstoxSubstanceId(), e);
-			}
-
-			return dto;
-		}).toList();
-	}
+        return dto;
+    }
 
     @Override
     public @ResponseBody
     List<SummaryByTissue> summaryByDtxsidAndTissue(String dtxsid, String tissue) {
         log.debug("bioactivity summary data for dtxsid = {} and tissue = {}", dtxsid, tissue);
 
-         return dataRepository.findByDtxsidAndTissue(dtxsid, tissue);
+        return dataRepository.findByDtxsidAndTissue(dtxsid, tissue);
     }
 }
